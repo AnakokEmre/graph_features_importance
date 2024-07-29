@@ -13,7 +13,9 @@ from torch.optim import Adam
 import scipy.sparse as sp
 import numpy as np
 import os
-os.chdir("C:/Users/Emre/Desktop/These/code trié/python/feature_importance/simulation")
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
 import time
 import matplotlib.pyplot as plt
 from tqdm import tqdm
@@ -33,7 +35,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 from scipy import stats
 import statsmodels.api as sm
-
+import seaborn as sns
 
 
 def graph_shapley_score(model,features01,features02,adj_norm,n_repeat = 1000):
@@ -173,6 +175,7 @@ def aggregation_shapley_score(model,features01,features02,adj_norm,k,n_repeat = 
     
     def f(zF,zk,model):
         features01_zF = features01.copy()
+        features01_zF[zk!=k] = mu[k][zk!=k]
         features01_zF[zk==k][:,zF==0] = mu[zk][zF==0]
         features1_zF = sparsify(features01_zF)
         with torch.no_grad():
@@ -214,10 +217,12 @@ def aggregation_shapley_score(model,features01,features02,adj_norm,k,n_repeat = 
 
 
 
-def train_model(adj0,features01,features02,GRDPG=0,latent_dim=2,niter= 1000):
+def train_model(adj0,features01,features02,GRDPG=0,latent_dim=2,niter= 1000,fair=None,delta=1):
     adj = sp.csr_matrix(adj0) 
     features1 = sparsify(features01)
     features2 = sparsify(features02)
+    if fair is not None:
+        S = sparsify(fair)
 
     adj_train, adj_label, train_edges, val_edges, val_edges_false, test_edges, test_edges_false = mask_test_edges(adj0)
     adj_norm = preprocess_graph(adj_train)
@@ -234,21 +239,38 @@ def train_model(adj0,features01,features02,GRDPG=0,latent_dim=2,niter= 1000):
     init_parameters(model)
     optimizer = Adam(model.parameters(), lr=args.learning_rate)
     pbar = tqdm(range(niter),desc = "Training Epochs")
-    for epoch in pbar:    
-        A_pred,Z1,Z2 = model(features1,features2,adj_norm)
-        optimizer.zero_grad()
-        loss = norm*F.binary_cross_entropy(A_pred.view(-1), adj_label.to_dense().view(-1), weight = weight_tensor)
-    
-        kl_divergence = 0.5/ A_pred.size(0) *( (1 + 2*model.logstd1 - model.mean1**2 - torch.exp(model.logstd1)**2).sum(1).mean()+
-                                              (1 + 2*model.logstd2 - model.mean2**2 - torch.exp(model.logstd2)**2).sum(1).mean())
-        loss -= kl_divergence
-        loss.backward()
-        optimizer.step()
+    if fair is None:
+        for epoch in pbar:    
+            A_pred,Z1,Z2 = model(features1,features2,adj_norm)
+            optimizer.zero_grad()
+            loss = norm*F.binary_cross_entropy(A_pred.view(-1), adj_label.to_dense().view(-1), weight = weight_tensor)
         
-        val_roc, val_ap = get_scores(val_edges, val_edges_false, A_pred)
-        pbar.set_postfix({"train_loss=": "{:.5f}".format(loss.item()),
-                          'val_roc=': val_roc})
+            kl_divergence = 0.5/ A_pred.size(0) *( (1 + 2*model.logstd1 - model.mean1**2 - torch.exp(model.logstd1)**2).sum(1).mean()+
+                                                  (1 + 2*model.logstd2 - model.mean2**2 - torch.exp(model.logstd2)**2).sum(1).mean())
+            loss -= kl_divergence
+            loss.backward()
+            optimizer.step()
+            
+            val_roc, val_ap = get_scores(val_edges, val_edges_false, A_pred)
+            pbar.set_postfix({"train_loss=": "{:.5f}".format(loss.item()),
+                              'val_roc=': val_roc})
+    else:
+        for epoch in pbar:    
+            A_pred,Z1,Z2 = model(features1,features2,adj_norm)
+            optimizer.zero_grad()
+            loss = norm*F.binary_cross_entropy(A_pred.view(-1), adj_label.to_dense().view(-1), weight = weight_tensor)
         
+            kl_divergence = 0.5/ A_pred.size(0) *( (1 + 2*model.logstd1 - model.mean1**2 - torch.exp(model.logstd1)**2).sum(1).mean()+
+                                                  (1 + 2*model.logstd2 - model.mean2**2 - torch.exp(model.logstd2)**2).sum(1).mean())
+            loss -= kl_divergence
+            loss+= delta*RFF_HSIC(model.mean1,S)
+            loss.backward()
+            optimizer.step()
+            
+            val_roc, val_ap = get_scores(val_edges, val_edges_false, A_pred)
+            pbar.set_postfix({"train_loss=": "{:.5f}".format(loss.item()),
+                              'val_roc=': val_roc})
+            
     test_roc, test_ap = get_scores(test_edges, test_edges_false, A_pred)
     print("1) End of training!", "test_roc=", "{:.5f}".format(test_roc),
           "test_ap=", "{:.5f}".format(test_ap))
@@ -270,14 +292,15 @@ def plot_score(SCORE,POS,NEG,ZERO,title="score",intercept=1,file = None):
     
 
 
-def plot_aggregated(SCORE,EXPECTED=None,title="score",annot=True,color_expected=True,file = None):
+def plot_aggregated(SCORE,EXPECTED=None,title="score",annot=True,sign=False,color_expected=True,file = None):
     data1 = SCORE.values.astype("float")
     if EXPECTED is None:
         EXPECTED = (data1*0).values.astype("float") 
     data2 = EXPECTED
     
     # Create a heatmap with the first dataset
-    ax = sns.heatmap(data1, annot=annot, cbar=True,center=0, square=True, linewidths=0)
+    annot2 = annot and not sign
+    ax = sns.heatmap(data1, annot=annot2, cbar=True,center=0, square=True, linewidths=0)
     
     # Add colored frames based on the second dataset
     num_rows, num_cols = data1.shape
@@ -295,6 +318,10 @@ def plot_aggregated(SCORE,EXPECTED=None,title="score",annot=True,color_expected=
                     [j+0.05, i+0.05], 0.9, 0.9, fill=False, edgecolor=color, linewidth=4
                 )
                 ax.add_patch(rect)
+                if sign:
+                    annotation = '+' if data1[i, j] > 0 else '-'
+                    ax.text(j + 0.5, i + 0.5, annotation, ha='center', va='center', color='white')
+                    
     
     # Show the plot
     plt.title(title)

@@ -21,7 +21,19 @@ class GraphConvSparse(nn.Module):
         x = torch.mm(self.adj, x)
         outputs = self.activation(x)
         return outputs
+    
+class GraphConvSparse_adj(nn.Module):
+    def __init__(self, input_dim, output_dim, activation = F.relu, **kwargs):
+        super(GraphConvSparse_adj, self).__init__(**kwargs)
+        self.weight = glorot_init(input_dim, output_dim) 
+        self.activation = activation
 
+    def forward(self, inputs,adj):
+        x = inputs
+        x = torch.mm(x,self.weight)
+        x = torch.mm(adj, x)
+        outputs = self.activation(x)
+        return outputs
 
 def dot_product_decode(Z1,Z2):
     A_pred = torch.sigmoid(torch.matmul(Z1,Z2.t()))
@@ -202,7 +214,54 @@ class VBGAE3(nn.Module):
         A_pred = GRDPG_decode(Z1, Z2,self.GRDPG)
 
         return A_pred,A_pred2, Z1, Z2,Z3
+
+
+
+class VBGAE_adj(nn.Module):
+    def __init__(self,input_dim1,input_dim2,species,GRDPG=0,latent_dim = args.hidden2_dim1):
+        super(VBGAE_adj,self).__init__()
+        self.base_gcn1 = GraphConvSparse_adj(input_dim1, args.hidden1_dim1)
+        self.gcn_mean1 = GraphConvSparse_adj(args.hidden1_dim1, latent_dim, activation=lambda x:x)
+        self.gcn_logstddev1 = GraphConvSparse_adj(args.hidden1_dim1, latent_dim, activation=lambda x:x)
+
+        self.species1 = panda.DataFrame({0:np.arange(len(species)),1:species})
+
+        self.base_gcn2 = GraphConvSparse_adj(input_dim2, args.hidden1_dim2)
+        self.gcn_mean2 = GraphConvSparse_adj(args.hidden1_dim2, latent_dim, activation=lambda x:x)
+        self.gcn_logstddev2 = GraphConvSparse_adj(args.hidden1_dim2,latent_dim, activation=lambda x:x)
+        self.GRDPG = GRDPG
+        self.latent_dim = latent_dim
         
+    def encode1(self, X1,adj):
+        hidden1 = self.base_gcn1(X1,torch.transpose(adj,0,1))
+        self.mean1 = self.gcn_mean1(hidden1,adj)
+        self.logstd1 = self.gcn_logstddev1(hidden1,adj)
+        gaussian_noise1 = torch.randn(X1.size(0), self.latent_dim)
+        sampled_z1 = gaussian_noise1*torch.exp(self.logstd1) + self.mean1
+        return sampled_z1
+
+    def encode2(self, X2,adj):
+        hidden2 = self.base_gcn2(X2,adj)
+        self.mean2 = self.gcn_mean2(hidden2,torch.transpose(adj,0,1))
+        self.logstd2 = self.gcn_logstddev2(hidden2,torch.transpose(adj,0,1))
+        gaussian_noise2 = torch.randn(X2.size(0),  self.latent_dim)
+        sampled_z2 = gaussian_noise2*torch.exp(self.logstd2) + self.mean2
+        return sampled_z2
+    
+    def encode3(self,X1,adj):
+        Z1 = self.encode1(X1,adj)
+        Z3 = Z1[self.species1.groupby(1).apply(lambda x: x.sample(1)).reset_index(drop=True)[0],:]
+        return Z3
+    
+    def forward(self,X1,X2,adj):
+        Z1 = self.encode1(X1,adj)
+        Z2 = self.encode2(X2,adj)
+        Z3 = self.encode3(X1,adj)
+    
+        A_pred2 = GRDPG_decode(Z3, Z2,self.GRDPG)
+        A_pred = GRDPG_decode(Z1, Z2,self.GRDPG)
+
+        return A_pred,A_pred2, Z1, Z2,Z3
     
     
 class Adversary(nn.Module):
