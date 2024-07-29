@@ -1,0 +1,350 @@
+---
+title: "simulation_results"
+output: html_document
+self_contained: true
+date: "2024-07-25"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(kableExtra)
+```
+
+
+
+
+## Results {.tabset}
+
+### Simulation 0 
+
+Simulation la plus simple
+
+* 3 covariables ont un effet positif
+* 3 covariables ont un effet négatif
+* 3 covariables sont sans effet
+
+* L'algorithme est entrainé avec toutes les covariables
+
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+X=read.table("results_for_rmd/res0/res.csv",sep=",",header=T,row.names = 1)
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+```
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+rownames(restable)= c("+","-","AUC")
+colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+
+kable(restable,digits = 2)
+```
+
+
+![](results_for_rmd/res0/score_shapley.png)
+![](results_for_rmd/res0/GRAD.png)
+![](results_for_rmd/res0/GRAD_features.png)
+![](results_for_rmd/res0/IG.png)
+![](results_for_rmd/res0/GRAD_LM.png)
+![](results_for_rmd/res0/IG_LM.png)
+
+
+### Simulation 1 
+
+
+* 3 covariables ont un effet positif
+* 3 covariables ont un effet négatif
+* 3 covariables sont sans effet
+
+L'algorithme est entrainé avec 
+
+* 2 covariables ayant un effet positif
+* 2 covariables ayant un effet négatif
+* 2 covariables sans effet
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+X=read.table("results_for_rmd/res1/res.csv",sep=",",header=T,row.names = 1)
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+```
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+rownames(restable)= c("+","-","AUC")
+colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+
+kable(restable,digits = 2)
+```
+
+
+![](results_for_rmd/res1/score_shapley.png)
+![](results_for_rmd/res1/GRAD.png)
+![](results_for_rmd/res1/GRAD_features.png)
+![](results_for_rmd/res1/IG.png)
+![](results_for_rmd/res1/GRAD_LM.png)
+![](results_for_rmd/res1/IG_LM.png)
+
+### Simulation 2
+
+
+* 3 covariables ont un effet positif
+* 3 covariables ont un effet négatif
+* 50 covariables sont sans effet
+
+* L'algorithme est entrainé avec toutes les covariables
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+X=read.table("results_for_rmd/res2/res.csv",sep=",",header=T,row.names = 1)
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+```
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+rownames(restable)= c("+","-","AUC")
+colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+
+kable(restable,digits = 2)
+```
+
+![](results_for_rmd/res2/score_shapley.png)
+![](results_for_rmd/res2/GRAD.png)
+![](results_for_rmd/res2/GRAD_features.png)
+![](results_for_rmd/res2/IG.png)
+![](results_for_rmd/res2/GRAD_LM.png)
+![](results_for_rmd/res2/IG_LM.png)
+
+
+### Simulation 3
+
+
+* 3 covariables ont un effet positif
+* 3 covariables ont un effet négatif
+* 50 covariables sont sans effet
+
+* L'algorithme est entrainé avec 
+
+* 2 covariables ayant un effet positif
+* 2 covariables ayant un effet négatif
+* 50 covariables sans effet
+
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+X=read.table("results_for_rmd/res3/res.csv",sep=",",header=T,row.names = 1)
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+```
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+rownames(restable)= c("+","-","AUC")
+colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+
+kable(restable,digits = 2)
+```
+
+
+
+![](results_for_rmd/res3/score_shapley.png)
+![](results_for_rmd/res3/GRAD.png)
+![](results_for_rmd/res3/GRAD_features.png)
+![](results_for_rmd/res3/IG.png)
+![](results_for_rmd/res3/GRAD_LM.png)
+![](results_for_rmd/res3/IG_LM.png)
+
+
+### Simulation 4
+
+
+
+* 1 covariable a un effet qui dépend d'un groupe
+* 1 covariable a un effet négatif
+* 1 covariable sans effet
+
+![](results_for_rmd/res4/fig0.png)
+![](results_for_rmd/res4/fig1.png)
+
+
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+X=read.table("results_for_rmd/res4/res.csv",sep=",",header=T,row.names = 1)
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+```
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+rownames(restable)= c("+","-","AUC")
+colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+
+kable(restable,digits = 2)
+```
+
+
+
+![](results_for_rmd/res4/score_shapley.png)
+![](results_for_rmd/res4/GRAD.png)
+![](results_for_rmd/res4/GRAD_features.png)
+![](results_for_rmd/res4/IG.png)
+![](results_for_rmd/res4/GRAD_LM.png)
+![](results_for_rmd/res4/IG_LM.png)
+
+
+
+
+
+
+### Simulation 5
+
+
+
+* 6 covariables ont un effet qui dépend d'un groupe (positif/négatif)
+* 50 covariables sans effet
+
+
+
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+X=read.table("results_for_rmd/res5/res.csv",sep=",",header=T,row.names = 1)
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+```
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+rownames(restable)= c("+","-","AUC")
+colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+
+kable(restable,digits = 2)
+```
+
+
+
+![](results_for_rmd/res5/score_shapley.png)
+![](results_for_rmd/res5/GRAD.png)
+![](results_for_rmd/res5/GRAD_features.png)
+![](results_for_rmd/res5/IG.png)
+![](results_for_rmd/res5/GRAD_LM.png)
+![](results_for_rmd/res5/IG_LM.png)
+
+
+
+
+![](results_for_rmd/res5/score_shapley_zoomed.png)
+![](results_for_rmd/res5/GRAD_zoomed.png)
+![](results_for_rmd/res5/GRAD_features_zoomed.png)
+![](results_for_rmd/res5/IG_zoomed.png)
+![](results_for_rmd/res5/GRAD_LM_zoomed.png)
+![](results_for_rmd/res5/IG_LM_zoomed.png)
+
+
+### Simulation 6
+
+* 6 covariables ont un effet qui dépend d'un groupe (positif/négatif/nul)
+* 6 covariables sans effet
+
+
+
+
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+X=read.table("results_for_rmd/res6/res.csv",sep=",",header=T,row.names = 1)
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+```
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+rownames(restable)= c("+","-","AUC")
+colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+
+kable(restable,digits = 2)
+```
+
+
+
+![](results_for_rmd/res6/score_shapley.png)
+![](results_for_rmd/res6/GRAD.png)
+![](results_for_rmd/res6/GRAD_features.png)
+![](results_for_rmd/res6/IG.png)
+![](results_for_rmd/res6/GRAD_LM.png)
+![](results_for_rmd/res6/IG_LM.png)
+
+
+
+
+![](results_for_rmd/res6/score_shapley_zoomed.png)
+![](results_for_rmd/res6/GRAD_zoomed.png)
+![](results_for_rmd/res6/GRAD_features_zoomed.png)
+![](results_for_rmd/res6/IG_zoomed.png)
+![](results_for_rmd/res6/GRAD_LM_zoomed.png)
+![](results_for_rmd/res6/IG_LM_zoomed.png)
+
+
+
+### Simulation 7
+
+* 6 covariables ont un effet qui dépend d'un groupe (positif/négatif)
+* 6 covariables sans effet
+* on passe le groupe en covariable
+
+
+
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+X=read.table("results_for_rmd/res7/res.csv",sep=",",header=T,row.names = 1)
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+```
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+rownames(restable)= c("+","-","AUC")
+colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+
+kable(restable,digits = 2)
+```
+
+
+
+![](results_for_rmd/res7/score_shapley.png)
+![](results_for_rmd/res7/GRAD.png)
+![](results_for_rmd/res7/GRAD_features.png)
+![](results_for_rmd/res7/IG.png)
+![](results_for_rmd/res7/GRAD_LM.png)
+![](results_for_rmd/res7/IG_LM.png)
+
+
+
+
+![](results_for_rmd/res7/score_shapley_zoomed.png)
+![](results_for_rmd/res7/GRAD_zoomed.png)
+![](results_for_rmd/res7/GRAD_features_zoomed.png)
+![](results_for_rmd/res7/IG_zoomed.png)
+![](results_for_rmd/res7/GRAD_LM_zoomed.png)
+![](results_for_rmd/res7/IG_LM_zoomed.png)
+
