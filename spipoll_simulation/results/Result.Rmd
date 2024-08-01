@@ -1,5 +1,5 @@
 ---
-title: "simulation_results"
+title: "simulation_results on simulated Spipoll"
 output: html_document
 self_contained: true
 date: "2024-07-25"
@@ -31,12 +31,17 @@ X=read.table("results_for_rmd/res0/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
 colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
@@ -70,12 +75,17 @@ X=read.table("results_for_rmd/res1/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
 colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
@@ -104,12 +114,17 @@ X=read.table("results_for_rmd/res2/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
 colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
@@ -143,12 +158,16 @@ X=read.table("results_for_rmd/res3/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
 ```
 
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
+```
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
 colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
@@ -183,12 +202,16 @@ X=read.table("results_for_rmd/res4/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
+```
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
 colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
@@ -224,12 +247,16 @@ X=read.table("results_for_rmd/res5/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
 ```
 
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
+```
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
 colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
@@ -270,12 +297,16 @@ X=read.table("results_for_rmd/res6/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
 ```
 
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
+```
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
 colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
@@ -317,12 +348,16 @@ X=read.table("results_for_rmd/res7/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
 ```
 
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
+```
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
 colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
@@ -365,12 +400,16 @@ X=read.table("results_for_rmd/res8/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
 ```
 
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
+```
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
 colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
@@ -413,12 +452,16 @@ X=read.table("results_for_rmd/res9/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
 ```
 
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
+```
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
 colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
@@ -462,12 +505,16 @@ X=read.table("results_for_rmd/res10/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
+```
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
 colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
@@ -488,7 +535,8 @@ kable(restable,digits = 2)
 
 ### Simulation 11
 
-* Certaines variables ont un effet positif ou négatif en fonction du groupe auquel il appartient
+* 8 variables ont un effet positif ou négatif en fonction du groupe auquel il appartient
+* 50 variables sont sans effet
 * la premiere covariable avec effet positif et celle avec effet négatif sont mises avec le HSIC
 
 l'objectif est de voir si les scores attribués aux variables avec le HSIC sont plus petits que les autres.  
@@ -501,12 +549,16 @@ X=read.table("results_for_rmd/res11/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
+```
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
 colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
@@ -534,11 +586,12 @@ kable(restable,digits = 2)
 
 
 ### Simulation 12
-Schéma complet !
+
 Similaire à simulation 9 mais avec HSIC
 
 * Il y a 4 groupes
-* Certaines variables ont un effet positif ou négatif ou nul en fonction du groupe auquel il appartient
+* 8 variables ont un effet positif ou négatif ou nul en fonction du groupe auquel il appartient
+* 8 variables sont sans effet
 * la premiere covariable avec effet positif et celle avec effet négatif sont mises avec le HSIC
 
 l'objectif est de voir si les scores attribués aux variables avec le HSIC sont plus petits que les autres.  
@@ -547,16 +600,20 @@ l'objectif est de voir si les scores attribués aux variables avec le HSIC sont 
 
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-X=read.table("results_for_rmd/res11/res.csv",sep=",",header=T,row.names = 1)
+X=read.table("results_for_rmd/res12/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
+```
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
 colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
@@ -580,5 +637,159 @@ kable(restable,digits = 2)
 ![](results_for_rmd/res12/GRAD_features_zoomed.png)
 ![](results_for_rmd/res12/IG_zoomed.png)
 ![](results_for_rmd/res12/GRAD_LM_zoomed.png)
+
+### Simulation 13
+Similaire à simulation 9 mais avec HSIC
+
+* Il y a 4 groupes
+* 8 variables ont un effet positif ou négatif ou nul en fonction du groupe auquel il appartient
+* 8 variables sont sans effet
+* 2 covariable sont mises avec le HSIC
+* Les groupes sont passés en covariables
+
+
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+X=read.table("results_for_rmd/res13/res.csv",sep=",",header=T,row.names = 1)
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
+```
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
+```
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
+rownames(restable)= c("+","-","AUC")
+colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+
+kable(restable,digits = 2)
+```
+
+
+
+![](results_for_rmd/res13/score_shapley.png)
+![](results_for_rmd/res13/GRAD.png)
+![](results_for_rmd/res13/GRAD_features.png)
+![](results_for_rmd/res13/IG.png)
+![](results_for_rmd/res13/GRAD_LM.png)
+![](results_for_rmd/res13/IG_LM.png)
+
+
+
+
+![](results_for_rmd/res13/score_shapley_zoomed.png)
+![](results_for_rmd/res13/GRAD_zoomed.png)
+![](results_for_rmd/res13/GRAD_features_zoomed.png)
+![](results_for_rmd/res13/IG_zoomed.png)
+![](results_for_rmd/res13/GRAD_LM_zoomed.png)
+
+
+
+### Simulation 14
+
+* Il y a **83 groupes**
+* 8 variables ont un effet positif ou négatif ou nul en fonction du groupe auquel il appartient
+* 8 variables sont sans effet
+* 2 variables sont mises avec le HSIC
+* les groupes sont passés en covariables
+
+
+
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+X=read.table("results_for_rmd/res11/res.csv",sep=",",header=T,row.names = 1)
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
+```
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
+```
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
+rownames(restable)= c("+","-","AUC")
+colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+
+kable(restable,digits = 2)
+```
+
+
+
+![](results_for_rmd/res14/score_shapley.png)
+![](results_for_rmd/res14/GRAD.png)
+![](results_for_rmd/res14/GRAD_features.png)
+![](results_for_rmd/res14/IG.png)
+![](results_for_rmd/res14/GRAD_LM.png)
+![](results_for_rmd/res14/IG_LM.png)
+
+
+
+![](results_for_rmd/res14/score_shapley_zoomed.png)
+![](results_for_rmd/res14/GRAD_zoomed.png)
+![](results_for_rmd/res14/GRAD_features_zoomed.png)
+![](results_for_rmd/res14/IG_zoomed.png)
+![](results_for_rmd/res14/GRAD_LM_zoomed.png)
+
+
+
+### Simulation 15
+Schema complet
+
+* Il y a **83 groupes**
+* 8 variables ont un effet positif ou négatif ou nul en fonction du groupe auquel il appartient
+* 50 variables sont sans effet
+* 2 variables sont mises avec le HSIC
+* les groupes sont passés en covariables
+
+
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+X=read.table("results_for_rmd/res15/res.csv",sep=",",header=T,row.names = 1)
+```
+
+```{r,echo=FALSE}
+print(paste0("AUC sessions-insectes sans covariables : " , round(mean(X$AUC0),3) ))
+print(paste0("AUC sessions-insectes avec covariables : " , round(mean(X$AUC1),3) ))
+```
+```{r,echo=FALSE}
+print(paste0("AUC plantes-insectes sans covariables : " , round(mean(X$AUC3_0),3) ))
+print(paste0("AUC plantes-insectes avec covariables : " , round(mean(X$AUC3_1),3) ))
+```
+
+```{r, fig.dim=c(5, 3),echo=FALSE}
+restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
+rownames(restable)= c("+","-","AUC")
+colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+
+kable(restable,digits = 2)
+```
+
+
+
+![](results_for_rmd/res15/score_shapley.png)
+![](results_for_rmd/res15/GRAD.png)
+![](results_for_rmd/res15/GRAD_features.png)
+![](results_for_rmd/res15/IG.png)
+![](results_for_rmd/res15/GRAD_LM.png)
+![](results_for_rmd/res15/IG_LM.png)
+
+
+
+![](results_for_rmd/res15/score_shapley_zoomed.png)
+![](results_for_rmd/res15/GRAD_zoomed.png)
+![](results_for_rmd/res15/GRAD_features_zoomed.png)
+![](results_for_rmd/res15/IG_zoomed.png)
+![](results_for_rmd/res15/GRAD_LM_zoomed.png)
+
+
 
 

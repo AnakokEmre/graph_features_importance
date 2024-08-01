@@ -38,7 +38,7 @@ import statsmodels.api as sm
 import seaborn as sns
 
 
-def graph_shapley_score(model,features01,features02,adj_norm,n_repeat = 1000):
+def graph_shapley_score(model,features01,features02,adj_norm,SP,n_repeat = 1000):
     mu = features01.mean(0)
     features2 = sparsify(features02)
     def f(zF,model):
@@ -48,9 +48,8 @@ def graph_shapley_score(model,features01,features02,adj_norm,n_repeat = 1000):
      
         features1_zF = sparsify(features01_zF)
         with torch.no_grad():
-            A_pred,Z1,Z2 = model(features1_zF,features2,adj_norm)
-        latent_space1,latent_space2 = model.mean1,model.mean2
-        return(A_pred.mean().item())
+            A_pred,A_pred2,Z1,Z2,Z3 = model(features1_zF,features2,adj_norm)
+        return((SP@A_pred.detach().numpy()).mean().item())
      
     v_list = tqdm(range(n_repeat))
     list_phi = []
@@ -80,8 +79,9 @@ def graph_shapley_score(model,features01,features02,adj_norm,n_repeat = 1000):
     return phi 
    
     
-def GRAD_score(model,features01,features02,adj_norm,n_repeat=50):
+def GRAD_score(model,features01,features02,adj_norm,SP,n_repeat=50):
     GRAD = np.zeros(features01.shape)
+    SP = torch.Tensor(SP)
     for k in range(n_repeat):
         features01_bis = torch.Tensor(features01)
         noise0 = 0.1*(features01_bis.max(0).values-features01_bis.min(0).values)
@@ -90,14 +90,15 @@ def GRAD_score(model,features01,features02,adj_norm,n_repeat=50):
         features01_bis.requires_grad_()
         features02_bis = torch.Tensor(features02)
         features02_bis.requires_grad_()
-        A_pred,Z1,Z2 = model(features01_bis,features02_bis,adj_norm)
-        res=A_pred.mean()
+        A_pred,A_pred2,Z1,Z2,Z3 = model(features01_bis,features02_bis,adj_norm)
+        res=(SP@A_pred).mean()
         res.backward()
         GRAD = GRAD+(features01_bis.grad.detach().numpy()-GRAD)/(k+1)
     return GRAD
 
-def IG_score(model,features01,features02,adj_norm,m=201):
+def IG_score(model,features01,features02,adj_norm,SP,m=201):
     mu = features01.mean(0)
+    SP = torch.Tensor(SP)
 
     target1 = torch.Tensor(features01)
     target2 = torch.Tensor(features02)
@@ -114,10 +115,11 @@ def IG_score(model,features01,features02,adj_norm,m=201):
         
         path_a1.requires_grad_()
         path_a2.requires_grad_()
-    
-        A_pred,Z1,Z2 = model(path_a1,path_a2,adj_norm)
-        res = A_pred.mean()
+        
+        A_pred,A_pred2,Z1,Z2,Z3 = model(path_a1,path_a2,adj_norm)
+        res=(SP@A_pred).mean()
         res.backward()
+        
         IG1 += path_a1.grad
         IG2 += path_a2.grad
         
@@ -167,7 +169,7 @@ def aggregation_score_LM(SCORE,x,k=None):
 
 
 
-def aggregation_shapley_score(model,features01,features02,adj_norm,k,n_repeat = 1000):
+def aggregation_shapley_score(model,features01,features02,adj_norm,SP,k,n_repeat = 1000):
     features2 = sparsify(features02)
     mu = np.zeros((max(k)+1,features01.shape[1]))
     for j in np.arange(max(k)+1):
@@ -179,9 +181,8 @@ def aggregation_shapley_score(model,features01,features02,adj_norm,k,n_repeat = 
         features01_zF[zk==k][:,zF==0] = mu[zk][zF==0]
         features1_zF = sparsify(features01_zF)
         with torch.no_grad():
-            A_pred,Z1,Z2 = model(features1_zF,features2,adj_norm)
-        latent_space1,latent_space2 = model.mean1,model.mean2
-        return(A_pred.mean().item())
+            A_pred,A_pred2,Z1,Z2,Z3 = model(features1_zF,features2,adj_norm)
+        return((SP@A_pred.detach().numpy()).mean().item())
      
     v_list = tqdm(range(n_repeat))
     list_phi = []
@@ -217,7 +218,7 @@ def aggregation_shapley_score(model,features01,features02,adj_norm,k,n_repeat = 
 
 
 
-def train_model(adj0,features01,features02,GRDPG=0,latent_dim=2,niter= 1000,fair=None,delta=1):
+def train_model(adj0,features01,features02,species_index,bipartite_net,GRDPG=0,latent_dim=2,niter= 1000,fair=None,delta=1):
     adj = sp.csr_matrix(adj0) 
     features1 = sparsify(features01)
     features2 = sparsify(features02)
@@ -234,17 +235,36 @@ def train_model(adj0,features01,features02,GRDPG=0,latent_dim=2,niter= 1000,fair
     weight_mask = adj_label.to_dense().view(-1) == 1
     weight_tensor = torch.ones(weight_mask.size(0)) 
     weight_tensor[weight_mask] = pos_weight
+
+    weight_mask = adj_label.to_dense().view(-1) == 1
+    weight_tensor = torch.ones(weight_mask.size(0)) 
+    weight_tensor[weight_mask] = pos_weight
+    
+    species = np.zeros((species_index.size, species_index.max() + 1))
+    species[np.arange(species_index.size), species_index] = 1
+    SP = (species/species.sum(0)).T
+    
+    bipartite,val_edges2,val_edges_false2,test_edges2,test_edges_false2=mask_test_edges2(adj_label,species, val_edges, val_edges_false, test_edges, test_edges_false)
+    #bipartite,val_edges2,val_edges_false2,test_edges2,test_edges_false2=mask_test_edges3(adj_label,species,bipartite_net, val_edges, val_edges_false, test_edges, test_edges_false)
+    
+    pos_weight2 = (bipartite.shape[0]*bipartite.shape[1]-bipartite.sum())/(bipartite.sum())
+    weight_tensor2 = torch.ones(bipartite.reshape(-1).shape[0]) 
+    weight_tensor2[bipartite.reshape(-1)==1] = pos_weight2
+    
+    norm2 = bipartite.shape[0] * bipartite.shape[1] / float((bipartite.shape[0] *bipartite.shape[1] - bipartite.sum()) * 2)
+
+
         
-    model = VBGAE_adj(features1.shape[1],features2.shape[1],GRDPG,latent_dim)
+    model = VBGAE_adj(features1.shape[1],features2.shape[1],species_index,GRDPG,latent_dim)
     init_parameters(model)
     optimizer = Adam(model.parameters(), lr=args.learning_rate)
     pbar = tqdm(range(niter),desc = "Training Epochs")
     if fair is None:
         for epoch in pbar:    
-            A_pred,Z1,Z2 = model(features1,features2,adj_norm)
+            A_pred,A_pred2,Z1,Z2,Z3 = model(features1,features2,adj_norm)
             optimizer.zero_grad()
-            loss = norm*F.binary_cross_entropy(A_pred.view(-1), adj_label.to_dense().view(-1), weight = weight_tensor)
-        
+            loss  = 2*norm2*F.binary_cross_entropy(A_pred2.view(-1), torch.Tensor(bipartite).view(-1),weight = weight_tensor2)
+            loss += norm*F.binary_cross_entropy(A_pred.view(-1), adj_label.to_dense().view(-1), weight = weight_tensor)
             kl_divergence = 0.5/ A_pred.size(0) *( (1 + 2*model.logstd1 - model.mean1**2 - torch.exp(model.logstd1)**2).sum(1).mean()+
                                                   (1 + 2*model.logstd2 - model.mean2**2 - torch.exp(model.logstd2)**2).sum(1).mean())
             loss -= kl_divergence
@@ -252,14 +272,16 @@ def train_model(adj0,features01,features02,GRDPG=0,latent_dim=2,niter= 1000,fair
             optimizer.step()
             
             val_roc, val_ap = get_scores(val_edges, val_edges_false, A_pred)
+            val_roc2, val_ap2 = get_scores(val_edges2, val_edges_false2, A_pred2)
             pbar.set_postfix({"train_loss=": "{:.5f}".format(loss.item()),
-                              'val_roc=': val_roc})
+                              'val_roc=': val_roc,
+                              "val_roc2=": "{:.5f}".format(val_roc2)})
     else:
         for epoch in pbar:    
-            A_pred,Z1,Z2 = model(features1,features2,adj_norm)
+            A_pred,A_pred2,Z1,Z2,Z3 = model(features1,features2,adj_norm)
             optimizer.zero_grad()
-            loss = norm*F.binary_cross_entropy(A_pred.view(-1), adj_label.to_dense().view(-1), weight = weight_tensor)
-        
+            loss  = 2*norm2*F.binary_cross_entropy(A_pred2.view(-1), torch.Tensor(bipartite).view(-1),weight = weight_tensor2)
+            loss += norm*F.binary_cross_entropy(A_pred.view(-1), adj_label.to_dense().view(-1), weight = weight_tensor)
             kl_divergence = 0.5/ A_pred.size(0) *( (1 + 2*model.logstd1 - model.mean1**2 - torch.exp(model.logstd1)**2).sum(1).mean()+
                                                   (1 + 2*model.logstd2 - model.mean2**2 - torch.exp(model.logstd2)**2).sum(1).mean())
             loss -= kl_divergence
@@ -268,15 +290,21 @@ def train_model(adj0,features01,features02,GRDPG=0,latent_dim=2,niter= 1000,fair
             optimizer.step()
             
             val_roc, val_ap = get_scores(val_edges, val_edges_false, A_pred)
+            val_roc2, val_ap2 = get_scores(val_edges2, val_edges_false2, A_pred2)
             pbar.set_postfix({"train_loss=": "{:.5f}".format(loss.item()),
-                              'val_roc=': val_roc})
+                              'val_roc=': val_roc,
+                              "val_roc2=": "{:.5f}".format(val_roc2)})
             
     test_roc, test_ap = get_scores(test_edges, test_edges_false, A_pred)
     print("1) End of training!", "test_roc=", "{:.5f}".format(test_roc),
           "test_ap=", "{:.5f}".format(test_ap))
 
+    A_pred3 = (SP@A_pred.detach().numpy())
+    test_roc3, test_ap3= get_scores(test_edges2, test_edges_false2,torch.Tensor(A_pred3))
+    print("3) End of training!", "test_roc=", "{:.5f}".format(test_roc3),
+          "test_ap=", "{:.5f}".format(test_ap3))
             
-    return model,features1,features2,adj_norm,test_roc
+    return model,features1,features2,adj_norm,SP,test_roc,test_roc3
 
 
 

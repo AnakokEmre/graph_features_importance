@@ -595,7 +595,7 @@ Similaire à simulation 9 mais avec HSIC
 
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-X=read.table("results_for_rmd/res11/res.csv",sep=",",header=T,row.names = 1)
+X=read.table("results_for_rmd/res13/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
