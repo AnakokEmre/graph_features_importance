@@ -218,7 +218,13 @@ def aggregation_shapley_score(model,features01,features02,adj_norm,SP,k,n_repeat
 
 
 
-def train_model(adj0,features01,features02,species_index,bipartite_net,GRDPG=0,latent_dim=2,niter= 1000,fair=None,delta=1):
+def train_model(adj0,features01,features02,species_index,bipartite_net,
+                GRDPG=0,
+                latent_dim=2,
+                niter= 1000,
+                fair=None,
+                delta=1,
+                seed=0):
     adj = sp.csr_matrix(adj0) 
     features1 = sparsify(features01)
     features2 = sparsify(features02)
