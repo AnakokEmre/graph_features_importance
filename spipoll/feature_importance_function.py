@@ -109,7 +109,7 @@ def IG_score(model,features01,features02,adj_norm,SP,m=201):
     
     IG1 = target1*0
     IG2 = target2*0
-    alpha = tqdm(np.linspace(0,1,m))
+    alpha = tqdm(np.linspace(0,1,m), leave=False)
     
     for a in alpha:
         path_a1 = baseline1 + a * (target1-baseline1) 
@@ -498,7 +498,7 @@ def print_result_aggregated2(result,k=3):
     print("MEDIAN score LAST LAND USE")
     print(np.array(colnames)[np.dstack(rank_land_use)[0][-k:]])
     
-def get_scores_aggregated(result):
+def get_scores_aggregated(result,k=3):
     R =  np.zeros(shape=result.shape)
     for j in range(result.shape[0]):
         R[j]=np.argsort(np.argsort(-result[j].reshape(-1))).reshape(result.shape[1:])
@@ -507,12 +507,49 @@ def get_scores_aggregated(result):
     rank_index = np.unravel_index(np.argsort(R.reshape(-1)),R.shape)
     RES = pandas.DataFrame(columns=["median_rank","median_score","plant","features","ecological_rank","land_use_rank"],index=np.arange(np.prod(R.shape)))
     RES["median_rank"] = R[rank_index]
-    RES["score"] = median_result[rank_index]
+    RES["median_score"] = median_result[rank_index]
     RES[["plant","features"]] = np.array(colnames)[np.dstack(rank_index)[0]]
           
-    land_use = [v in LABELS.values for v in colnames]
+    land_use = [v in LABELS.values for v in RES["features"]]
     ecological = [not elem for elem in land_use]   
-    tri_ecological= R[:,ecological]
-    rank_ecological =  np.unravel_index(np.argsort(tri_ecological.reshape(-1)),tri_ecological.shape)
-
+    RES.loc[land_use,"land_use_rank"] = np.arange(sum(land_use))
+    RES.loc[ecological,"ecological_rank"] = np.arange(sum(ecological))
     
+    print("MEDIAN RANK FIRST ECOLOGICAL")
+    print(RES[["median_rank","plant","features","median_score"]][ecological].iloc[:k,:])
+    print("\n")
+    
+    print("MEDIAN RANK FIRST LAND USE")
+    print(RES[["median_rank","plant","features","median_score"]][land_use].iloc[:k,:])
+    print("\n")
+    
+    print("MEDIAN RANK LAST ECOLOGICAL")
+    print(RES[["median_rank","plant","features","median_score"]][ecological].iloc[-k:,:])
+    print("\n")
+    
+    print("MEDIAN score LAST LAND USE")
+    print(RES[["median_rank","plant","features","median_score"]][land_use].iloc[-k:,:])
+    
+    return RES
+
+
+def get_scores_aggregated2(result,k=3):
+    R =  np.zeros(shape=result.shape)
+    for j in range(result.shape[0]):
+        R[j]=np.argsort(np.argsort(-np.abs(result[j]).reshape(-1))).reshape(result.shape[1:])
+    R = np.median(R,axis=0)
+    median_result = np.median(result,axis=0)
+    rank_index = np.unravel_index(np.argsort(R.reshape(-1)),R.shape)
+    RES = pandas.DataFrame(columns=["median_rank","median_score","plant","features","ecological_rank","land_use_rank"],index=np.arange(np.prod(R.shape)))
+    RES["median_rank"] = R[rank_index]
+    RES["median_score"] = median_result[rank_index]
+    RES[["plant","features"]] = np.array(colnames)[np.dstack(rank_index)[0]]
+          
+    land_use = [v in LABELS.values for v in RES["features"]]
+    ecological = [not elem for elem in land_use]   
+    RES.loc[land_use,"land_use_rank"] = np.arange(sum(land_use))
+    RES.loc[ecological,"ecological_rank"] = np.arange(sum(ecological))
+    bool0 = np.array([k in ["Temperature","sinD","cosD","Y"] for k in RES["features"].values])
+    RES = RES[((RES["plant"]==RES["features"] )| np.array(land_use)|bool0)]
+       
+    return RES
