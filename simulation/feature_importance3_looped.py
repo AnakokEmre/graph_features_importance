@@ -730,12 +730,12 @@ for k in range(K):
     features01 = np.ones(shape=(adj0.shape[0],1))
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,test_roc0 =  train_model(adj0,features01,features02,GRDPG=1,latent_dim=2,niter= 500)
+    model,features1,features2,adj_norm,test_roc0 =  train_model(adj0,features01,features02,GRDPG=3,latent_dim=2,niter= 500)
     
     features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),x1_1,x1_2,x1_3])
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,test_roc1 =  train_model(adj0,features01,features02,GRDPG=1,latent_dim=2,niter= 500)
+    model,features1,features2,adj_norm,test_roc1 =  train_model(adj0,features01,features02,GRDPG=3,latent_dim=2,niter= 500)
     SCORE_shapley = graph_shapley_score(model,features01,features02,adj_norm,n_repeat = 1000)
     SCORE_grad = GRAD_score(model,features01,features02,adj_norm,n_repeat=50)
     SCORE_IG1,SCORE_IG2 = IG_score(model,features01,features02,adj_norm,m=201)
@@ -824,12 +824,12 @@ for k in range(K):
     features01 = np.ones(shape=(adj0.shape[0],1))
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,test_roc0 =  train_model(adj0,features01,features02,GRDPG=1,latent_dim=2,niter= 500)
+    model,features1,features2,adj_norm,test_roc0 =  train_model(adj0,features01,features02,GRDPG=3,latent_dim=2,niter= 500)
     
     features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),species_index_ind,x1_1,x1_2,x1_3])
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,test_roc1 =  train_model(adj0,features01,features02,GRDPG=1,latent_dim=2,niter= 500)
+    model,features1,features2,adj_norm,test_roc1 =  train_model(adj0,features01,features02,GRDPG=3,latent_dim=2,niter= 500)
     SCORE_shapley = graph_shapley_score(model,features01,features02,adj_norm,n_repeat = 1000)
     SCORE_grad = GRAD_score(model,features01,features02,adj_norm,n_repeat=50)
     SCORE_IG1,SCORE_IG2 = IG_score(model,features01,features02,adj_norm,m=201)
