@@ -435,10 +435,6 @@ def print_result2(result,k=3):
      
      
 
-np.argsort(np.argsort(SCORE_grad_LM.values.reshape(-1))).reshape(SCORE_grad_LM.shape)
-R =  np.zeros(shape=(2,83,104))
-R[0] = np.argsort(np.argsort(result[0].reshape(-1))).reshape(result.shape[1:])
-R[1] = np.argsort(np.argsort(result[1].reshape(-1))).reshape(result.shape[1:])
 
 def print_result_aggregated(result,k=3):
     R =  np.zeros(shape=result.shape)

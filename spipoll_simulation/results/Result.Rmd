@@ -702,7 +702,7 @@ kable(restable,digits = 2)
 
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
-X=read.table("results_for_rmd/res11/res.csv",sep=",",header=T,row.names = 1)
+X=read.table("results_for_rmd/res14/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}

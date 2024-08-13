@@ -280,13 +280,13 @@ def train_model(adj0,features01,features02,GRDPG=0,latent_dim=2,niter= 1000,fair
 
 
 
-def plot_score(SCORE,POS,NEG,ZERO,title="score",intercept=1,file = None):
+def plot_score(SCORE,POS,NEG,ZERO,title="score",intercept=1,file = None, fontsize=10):
     X = np.arange(SCORE.shape[-1])
     plt.scatter(X,SCORE ,c= intercept*["black"]+POS*["green"]+NEG*["red"]+ZERO*["blue"])
     plt.axhline(y=0, linestyle='--')
-    plt.title(title)
+    plt.title(title,fontsize = fontsize)
     if file is not None:
-        plt.savefig(file)
+        plt.savefig(file=".pdf")
     plt.show()
     
     

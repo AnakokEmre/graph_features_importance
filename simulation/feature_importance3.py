@@ -88,9 +88,9 @@ SCORE_IG1,SCORE_IG2 = IG_score(model,features01,features02,adj_norm,m=201)
 #%%
 directory = "results/brouillon/"
 #directory = "results/results_for_rmd/res0/"
-plot_score(SCORE_shapley,POS,NEG,ZERO,title="Shapley",file = directory+"score_shapley.png")
+plot_score(SCORE_shapley,POS,NEG,ZERO,title="GraphSVX",file = directory+"score_shapley.png")
 plot_score(aggregation_score_mean(SCORE_grad),POS,NEG,ZERO,title="Grad",file = directory+"GRAD.png")
-plot_score(aggregation_score_mean(SCORE_grad*features01),POS,NEG,ZERO,title="Grad*features",file = directory+"GRAD_features.png")
+plot_score(aggregation_score_mean(SCORE_grad*features01),POS,NEG,ZERO,title="Grad*Input",file = directory+"GRAD_features.png")
 #plot_score(aggregation_score_mean(SCORE_grad**2),POS,NEG,ZERO,title="Grad squared",file = directory+"score_shapley.png")
 plot_score(aggregation_score_mean(SCORE_IG1),POS,NEG,ZERO,title="IG",file = directory+"IG.png")
 plot_score(aggregation_score_LM(SCORE_grad,features01),POS,NEG,ZERO,title="Grad LM",file = directory+"GRAD_LM.png")
@@ -146,9 +146,9 @@ SCORE_IG1,SCORE_IG2 = IG_score(model,features01,features02,adj_norm,m=201)
 #%%
 
 directory = "results/results_for_rmd/res1/"
-plot_score(SCORE_shapley,POS-1,NEG-1,ZERO,title="Shapley",file = directory+"score_shapley.png")
+plot_score(SCORE_shapley,POS-1,NEG-1,ZERO,title="GraphSVX",file = directory+"score_shapley.png")
 plot_score(aggregation_score_mean(SCORE_grad),POS-1,NEG-1,ZERO,title="Grad",file = directory+"GRAD.png")
-plot_score(aggregation_score_mean(SCORE_grad*features01),POS-1,NEG-1,ZERO,title="Grad*features",file = directory+"GRAD_features.png")
+plot_score(aggregation_score_mean(SCORE_grad*features01),POS-1,NEG-1,ZERO,title="Grad*Input",file = directory+"GRAD_features.png")
 #plot_score(aggregation_score_mean(SCORE_grad**2),POS-1,NEG-1,ZERO,title="Grad squared")
 plot_score(aggregation_score_mean(SCORE_IG1),POS-1,NEG-1,ZERO,title="IG",file = directory+"IG.png")
 plot_score(aggregation_score_LM(SCORE_grad,features01),POS-1,NEG-1,ZERO,title="Grad LM",file = directory+"GRAD_LM.png")
@@ -208,13 +208,13 @@ SCORE_IG1,SCORE_IG2 = IG_score(model,features01,features02,adj_norm,m=201)
 #%%
 
 directory = "results/results_for_rmd/res2/"
-plot_score(SCORE_shapley,POS,NEG,ZERO,title="Shapley",file = directory+"score_shapley.png")
-plot_score(aggregation_score_mean(SCORE_grad),POS,NEG,ZERO,title="Grad",file = directory+"GRAD.png")
-plot_score(aggregation_score_mean(SCORE_grad*features01),POS,NEG,ZERO,title="Grad*features",file = directory+"GRAD_features.png")
+plot_score(SCORE_shapley,POS,NEG,ZERO,title="GraphSVX",file = directory+"score_shapley.png",fontsize=20)
+plot_score(aggregation_score_mean(SCORE_grad),POS,NEG,ZERO,title="Grad",file = directory+"GRAD.png",fontsize=20)
+plot_score(aggregation_score_mean(SCORE_grad*features01),POS,NEG,ZERO,title="Grad*Input",file = directory+"GRAD_features.png",fontsize=20)
 #plot_score(aggregation_score_mean(SCORE_grad**2),POS,NEG,ZERO,title="Grad squared",file = directory+"score_shapley.png")
-plot_score(aggregation_score_mean(SCORE_IG1),POS,NEG,ZERO,title="IG",file = directory+"IG.png")
-plot_score(aggregation_score_LM(SCORE_grad,features01),POS,NEG,ZERO,title="Grad LM",file = directory+"GRAD_LM.png")
-plot_score(aggregation_score_LM(SCORE_IG1,features01),POS,NEG,ZERO,title="IG LM",file = directory+"IG_LM.png")
+plot_score(aggregation_score_mean(SCORE_IG1),POS,NEG,ZERO,title="IG",file = directory+"IG.png",fontsize=20)
+plot_score(aggregation_score_LM(SCORE_grad,features01),POS,NEG,ZERO,title="Grad LM",file = directory+"GRAD_LM.png",fontsize=20)
+plot_score(aggregation_score_LM(SCORE_IG1,features01),POS,NEG,ZERO,title="IG LM",file = directory+"IG_LM.png",fontsize=20)
 
 
 #%% Simulation 3
@@ -265,9 +265,9 @@ SCORE_IG1,SCORE_IG2 = IG_score(model,features01,features02,adj_norm,m=201)
 
 #%%
 directory = "results/results_for_rmd/res3/"
-plot_score(SCORE_shapley,POS-1,NEG-1,ZERO,title="Shapley",file = directory+"score_shapley.png")
+plot_score(SCORE_shapley,POS-1,NEG-1,ZERO,title="GraphSVX",file = directory+"score_shapley.png")
 plot_score(aggregation_score_mean(SCORE_grad),POS-1,NEG-1,ZERO,title="Grad",file = directory+"GRAD.png")
-plot_score(aggregation_score_mean(SCORE_grad*features01),POS-1,NEG-1,ZERO,title="Grad*features",file = directory+"GRAD_features.png")
+plot_score(aggregation_score_mean(SCORE_grad*features01),POS-1,NEG-1,ZERO,title="Grad*Input",file = directory+"GRAD_features.png")
 #plot_score(aggregation_score_mean(SCORE_grad**2),POS-1,NEG-1,ZERO,title="Grad squared")
 plot_score(aggregation_score_mean(SCORE_IG1),POS-1,NEG-1,ZERO,title="IG",file = directory+"IG.png")
 plot_score(aggregation_score_LM(SCORE_grad,features01),POS-1,NEG-1,ZERO,title="Grad LM",file = directory+"GRAD_LM.png")
@@ -344,16 +344,16 @@ directory = "results/results_for_rmd/res4/"
 EXPECTED = np.zeros((2,features01.shape[1]))
 EXPECTED[:,1]= [-1,1]
 EXPECTED[:,2] = -1
-plot_score(SCORE_shapley,POS,NEG,ZERO,title="Shapley")
+plot_score(SCORE_shapley,POS,NEG,ZERO,title="GraphSVX")
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index),EXPECTED,title="Grad",file = directory+"GRAD.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*features",file = directory+"GRAD_features.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*Input",file = directory+"GRAD_features.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index),   EXPECTED,title="Grad squared")
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index),   EXPECTED,title="IG",file = directory+"IG.png")
 
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index),   EXPECTED,title="Grad LM",file = directory+"GRAD_LM.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index),   EXPECTED,title="IG LM",file = directory+"IG_LM.png")
-plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="Shapley",file = directory+"score_shapley.png")
+plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="GraphSVX",file = directory+"score_shapley.png")
 
 #%%
 A_pred,z1,z2 = model(features1,features2,adj_norm)
@@ -434,24 +434,24 @@ directory = "results/results_for_rmd/res5/"
 #directory = "results/brouillon/"
 
 
-plot_score(SCORE_shapley,POS,NEG,ZERO,title="Shapley")
+plot_score(SCORE_shapley,POS,NEG,ZERO,title="GraphSVX")
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index),EXPECTED,title="Grad",annot=False,color_expected=False,file = directory+"GRAD.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*features",annot=False,color_expected=False,file = directory+"GRAD_features.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*Input",annot=False,color_expected=False,file = directory+"GRAD_features.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index),   EXPECTED,title="Grad squared",annot=False,color_expected=False)
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index),   EXPECTED,title="IG",annot=False,color_expected=False,file = directory+"IG.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index),   EXPECTED,title="Grad LM",annot=False,color_expected=False,file = directory+"GRAD_LM.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index),   EXPECTED,title="IG LM",annot=False,color_expected=False,file = directory+"IG_LM.png")
-plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="Shapley",annot=False,color_expected=False,file = directory+"score_shapley.png")
+plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="GraphSVX",annot=False,color_expected=False,file = directory+"score_shapley.png")
 
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index).iloc[:,:1+POS+NEG],EXPECTED[:,:1+POS+NEG],title="Grad",file = directory+"GRAD_zoomed.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad*features",file = directory+"GRAD_features_zoomed.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad*Input",file = directory+"GRAD_features_zoomed.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad squared")
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="IG",file = directory+"IG_zoomed.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad LM",file = directory+"GRAD_LM_zoomed.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="IG LM",file = directory+"IG_LM_zoomed.png")
-plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+POS+NEG],   EXPECTED,title="Shapley",file = directory+"score_shapley_zoomed.png")
+plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+POS+NEG],   EXPECTED,title="GraphSVX",file = directory+"score_shapley_zoomed.png")
 
 
 
@@ -523,24 +523,24 @@ EXPECTED[:,6]= [0,-1]
 #directory = "results/results_for_rmd/res6/"
 directory = "results/brouillon/"
 
-plot_score(SCORE_shapley,POS,NEG,ZERO,title="Shapley")
+plot_score(SCORE_shapley,POS,NEG,ZERO,title="GraphSVX")
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index),EXPECTED,title="Grad",annot=False,color_expected=False,file = directory+"GRAD.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*features",annot=False,color_expected=False,file = directory+"GRAD_features.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*Input",annot=False,color_expected=False,file = directory+"GRAD_features.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index),   EXPECTED,title="Grad squared",annot=False,color_expected=False)
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index),   EXPECTED,title="IG",annot=False,color_expected=False,file = directory+"IG.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index),   EXPECTED,title="Grad LM",annot=False,color_expected=False,file = directory+"GRAD_LM.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index),   EXPECTED,title="IG LM",annot=False,color_expected=False,file = directory+"IG_LM.png")
-plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="Shapley",annot=False,color_expected=False,file = directory+"score_shapley.png")
+plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="GraphSVX",annot=False,color_expected=False,file = directory+"score_shapley.png")
 
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index).iloc[:,:1+POS+NEG],EXPECTED[:,:1+POS+NEG],title="Grad",file = directory+"GRAD_zoomed.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad*features",file = directory+"GRAD_features_zoomed.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad*Input",file = directory+"GRAD_features_zoomed.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad squared")
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="IG",file = directory+"IG_zoomed.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad LM",file = directory+"GRAD_LM_zoomed.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="IG LM",file = directory+"IG_LM_zoomed.png")
-plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+POS+NEG], EXPECTED,title="Shapley",file = directory+"score_shapley_zoomed.png")
+plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+POS+NEG], EXPECTED,title="GraphSVX",file = directory+"score_shapley_zoomed.png")
 
 
 
@@ -613,24 +613,24 @@ directory = "results/results_for_rmd/res7/"
 #directory = "results/brouillon/"
 
 
-plot_score(SCORE_shapley,POS,NEG,ZERO,intercept=2,title="Shapley")
+plot_score(SCORE_shapley,POS,NEG,ZERO,intercept=2,title="GraphSVX")
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index),EXPECTED,title="Grad",annot=False,color_expected=False,file = directory+"GRAD.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*features",annot=False,color_expected=False,file = directory+"GRAD_features.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*Input",annot=False,color_expected=False,file = directory+"GRAD_features.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index),   EXPECTED,title="Grad squared",annot=False,color_expected=False)
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index),   EXPECTED,title="IG",annot=False,color_expected=False,file = directory+"IG.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index),   EXPECTED,title="Grad LM",annot=False,color_expected=False,file = directory+"GRAD_LM.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index),   EXPECTED,title="IG LM",annot=False,color_expected=False,file = directory+"IG_LM.png")
-plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="Shapley",annot=False,color_expected=False,file = directory+"score_shapley.png")
+plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="GraphSVX",annot=False,color_expected=False,file = directory+"score_shapley.png")
 
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index).iloc[:,:2+POS+NEG],EXPECTED[:,:2+POS+NEG],title="Grad",file = directory+"GRAD_zoomed.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:2+POS+NEG],   EXPECTED[:,:2+POS+NEG],title="Grad*features",file = directory+"GRAD_features_zoomed.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:2+POS+NEG],   EXPECTED[:,:2+POS+NEG],title="Grad*Input",file = directory+"GRAD_features_zoomed.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad squared")
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index).iloc[:,:2+POS+NEG],   EXPECTED[:,:2+POS+NEG],title="IG",file = directory+"IG_zoomed.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index).iloc[:,:2+POS+NEG],   EXPECTED[:,:2+POS+NEG],title="Grad LM",file = directory+"GRAD_LM_zoomed.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index).iloc[:,:2+POS+NEG],   EXPECTED[:,:2+POS+NEG],title="IG LM",file = directory+"IG_LM_zoomed.png")
-plot_aggregated(SCORE_shapley_aggregated.iloc[:,:2+POS+NEG],   EXPECTED[:,:2+POS+NEG],title="Shapley",file = directory+"score_shapley_zoomed.png")
+plot_aggregated(SCORE_shapley_aggregated.iloc[:,:2+POS+NEG],   EXPECTED[:,:2+POS+NEG],title="GraphSVX",file = directory+"score_shapley_zoomed.png")
 
 
 
@@ -706,24 +706,24 @@ directory = "results/results_for_rmd/res8/"
 #directory = "results/brouillon/"
 
 
-plot_score(SCORE_shapley,POS,NEG,ZERO,title="Shapley")
+plot_score(SCORE_shapley,POS,NEG,ZERO,title="GraphSVX")
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index),EXPECTED,title="Grad",annot=False,color_expected=False,file = directory+"GRAD.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*features",annot=False,color_expected=False,file = directory+"GRAD_features.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*Input",annot=False,color_expected=False,file = directory+"GRAD_features.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index),   EXPECTED,title="Grad squared",annot=False,color_expected=False)
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index),   EXPECTED,title="IG",annot=False,color_expected=False,file = directory+"IG.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index),   EXPECTED,title="Grad LM",annot=False,color_expected=False,file = directory+"GRAD_LM.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index),   EXPECTED,title="IG LM",annot=False,color_expected=False,file = directory+"IG_LM.png")
-plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="Shapley",annot=False,color_expected=False,file = directory+"score_shapley.png")
+plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="GraphSVX",annot=False,color_expected=False,file = directory+"score_shapley.png")
 
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index).iloc[:,:1+POS+NEG],EXPECTED[:,:1+POS+NEG],title="Grad",sign=True,file = directory+"GRAD_zoomed.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad*features",sign=True,file = directory+"GRAD_features_zoomed.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad*Input",sign=True,file = directory+"GRAD_features_zoomed.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad squared")
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="IG",sign=True,file = directory+"IG_zoomed.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad LM",sign=True,file = directory+"GRAD_LM_zoomed.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="IG LM",sign=True,file = directory+"IG_LM_zoomed.png")
-plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+POS+NEG], EXPECTED[:,:1+POS+NEG],title="Shapley",sign=True,file = directory+"score_shapley_zoomed.png")
+plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+POS+NEG], EXPECTED[:,:1+POS+NEG],title="GraphSVX",sign=True,file = directory+"score_shapley_zoomed.png")
 
 
 
@@ -802,24 +802,24 @@ directory = "results/results_for_rmd/res9/"
 #directory = "results/brouillon/"
 
 
-plot_score(SCORE_shapley,POS,NEG,ZERO,title="Shapley")
+plot_score(SCORE_shapley,POS,NEG,ZERO,title="GraphSVX")
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index),EXPECTED,title="Grad",annot=False,color_expected=False,file = directory+"GRAD.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*features",annot=False,color_expected=False,file = directory+"GRAD_features.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*Input",annot=False,color_expected=False,file = directory+"GRAD_features.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index),   EXPECTED,title="Grad squared",annot=False,color_expected=False)
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index),   EXPECTED,title="IG",annot=False,color_expected=False,file = directory+"IG.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index),   EXPECTED,title="Grad LM",annot=False,color_expected=False,file = directory+"GRAD_LM.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index),   EXPECTED,title="IG LM",annot=False,color_expected=False,file = directory+"IG_LM.png")
-plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="Shapley",annot=False,color_expected=False,file = directory+"score_shapley.png")
+plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="GraphSVX",annot=False,color_expected=False,file = directory+"score_shapley.png")
 
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index).iloc[:,:1+nb_groupe+POS+NEG],EXPECTED[:,:1+nb_groupe+POS+NEG],title="Grad",annot=False,file = directory+"GRAD_zoomed.png",sign=True)
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+nb_groupe+POS+NEG],   EXPECTED[:,:1+nb_groupe+POS+NEG],title="Grad*features",annot=False,file = directory+"GRAD_features_zoomed.png",sign=True)
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+nb_groupe+POS+NEG],   EXPECTED[:,:1+nb_groupe+POS+NEG],title="Grad*Input",annot=False,file = directory+"GRAD_features_zoomed.png",sign=True)
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad squared")
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index).iloc[:,:1+nb_groupe+POS+NEG],   EXPECTED[:,:1+nb_groupe+POS+NEG],title="IG",annot=False,file = directory+"IG_zoomed.png",sign=True)
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index).iloc[:,:1+nb_groupe+POS+NEG],   EXPECTED[:,:1+nb_groupe+POS+NEG],title="Grad LM",annot=False,file = directory+"GRAD_LM_zoomed.png",sign=True)
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index).iloc[:,:1+nb_groupe+POS+NEG],   EXPECTED[:,:1+nb_groupe+POS+NEG],title="IG LM",annot=False,file = directory+"IG_LM_zoomed.png",sign=True)
-plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+nb_groupe+POS+NEG], EXPECTED,title="Shapley",annot=False,file = directory+"score_shapley_zoomed.png",sign=True)
+plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+nb_groupe+POS+NEG], EXPECTED,title="GraphSVX",annot=False,file = directory+"score_shapley_zoomed.png",sign=True)
 
 
 
@@ -878,9 +878,9 @@ SCORE_IG1,SCORE_IG2 = IG_score(model,features01,features02,adj_norm,m=201)
 #%%
 #directory = "results/brouillon/"
 directory = "results/results_for_rmd/res10/"
-plot_score(SCORE_shapley,POS,NEG,ZERO,title="Shapley",file = directory+"score_shapley.png")
+plot_score(SCORE_shapley,POS,NEG,ZERO,title="GraphSVX",file = directory+"score_shapley.png")
 plot_score(aggregation_score_mean(SCORE_grad),POS,NEG,ZERO,title="Grad",file = directory+"GRAD.png")
-plot_score(aggregation_score_mean(SCORE_grad*features01),POS,NEG,ZERO,title="Grad*features",file = directory+"GRAD_features.png")
+plot_score(aggregation_score_mean(SCORE_grad*features01),POS,NEG,ZERO,title="Grad*Input",file = directory+"GRAD_features.png")
 #plot_score(aggregation_score_mean(SCORE_grad**2),POS,NEG,ZERO,title="Grad squared",file = directory+"score_shapley.png")
 plot_score(aggregation_score_mean(SCORE_IG1),POS,NEG,ZERO,title="IG",file = directory+"IG.png")
 plot_score(aggregation_score_LM(SCORE_grad,features01),POS,NEG,ZERO,title="Grad LM",file = directory+"GRAD_LM.png")
@@ -960,24 +960,24 @@ directory = "results/results_for_rmd/res11/"
 #directory = "results/brouillon/"
 
 
-plot_score(SCORE_shapley,POS,NEG,ZERO,title="Shapley")
+plot_score(SCORE_shapley,POS,NEG,ZERO,title="GraphSVX")
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index),EXPECTED,title="Grad",annot=False,color_expected=False,file = directory+"GRAD.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*features",annot=False,color_expected=False,file = directory+"GRAD_features.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*Input",annot=False,color_expected=False,file = directory+"GRAD_features.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index),   EXPECTED,title="Grad squared",annot=False,color_expected=False)
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index),   EXPECTED,title="IG",annot=False,color_expected=False,file = directory+"IG.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index),   EXPECTED,title="Grad LM",annot=False,color_expected=False,file = directory+"GRAD_LM.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index),   EXPECTED,title="IG LM",annot=False,color_expected=False,file = directory+"IG_LM.png")
-plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="Shapley",annot=False,color_expected=False,file = directory+"score_shapley.png")
+plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="GraphSVX",annot=False,color_expected=False,file = directory+"score_shapley.png")
 
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index).iloc[:,:1+POS+NEG],EXPECTED[:,:1+POS+NEG],title="Grad",file = directory+"GRAD_zoomed.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad*features",file = directory+"GRAD_features_zoomed.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad*Input",file = directory+"GRAD_features_zoomed.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad squared")
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="IG",file = directory+"IG_zoomed.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad LM",file = directory+"GRAD_LM_zoomed.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="IG LM",file = directory+"IG_LM_zoomed.png")
-plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+POS+NEG],   EXPECTED,title="Shapley",file = directory+"score_shapley_zoomed.png")
+plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+POS+NEG],   EXPECTED,title="GraphSVX",file = directory+"score_shapley_zoomed.png")
 
 
 
@@ -1053,24 +1053,24 @@ directory = "results/results_for_rmd/res12/"
 #directory = "results/brouillon/"
 
 
-plot_score(SCORE_shapley,POS,NEG,ZERO,title="Shapley")
+plot_score(SCORE_shapley,POS,NEG,ZERO,title="GraphSVX")
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index),EXPECTED,title="Grad",annot=False,color_expected=False,file = directory+"GRAD.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*features",annot=False,color_expected=False,file = directory+"GRAD_features.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*Input",annot=False,color_expected=False,file = directory+"GRAD_features.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index),   EXPECTED,title="Grad squared",annot=False,color_expected=False)
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index),   EXPECTED,title="IG",annot=False,color_expected=False,file = directory+"IG.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index),   EXPECTED,title="Grad LM",annot=False,color_expected=False,file = directory+"GRAD_LM.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index),   EXPECTED,title="IG LM",annot=False,color_expected=False,file = directory+"IG_LM.png")
-plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="Shapley",annot=False,color_expected=False,file = directory+"score_shapley.png")
+plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="GraphSVX",annot=False,color_expected=False,file = directory+"score_shapley.png")
 
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index).iloc[:,:1+POS+NEG],EXPECTED[:,:1+POS+NEG],title="Grad",sign=True,file = directory+"GRAD_zoomed.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad*features",sign=True,file = directory+"GRAD_features_zoomed.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad*Input",sign=True,file = directory+"GRAD_features_zoomed.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad squared")
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="IG",sign=True,file = directory+"IG_zoomed.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad LM",sign=True,file = directory+"GRAD_LM_zoomed.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="IG LM",sign=True,file = directory+"IG_LM_zoomed.png")
-plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+POS+NEG], EXPECTED[:,:1+POS+NEG],title="Shapley",sign=True,file = directory+"score_shapley_zoomed.png")
+plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+POS+NEG], EXPECTED[:,:1+POS+NEG],title="GraphSVX",sign=True,file = directory+"score_shapley_zoomed.png")
 
 
 
@@ -1154,21 +1154,21 @@ directory = "results/results_for_rmd/res13/"
 
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index),EXPECTED,title="Grad",annot=False,color_expected=False,file = directory+"GRAD.png")
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*features",annot=False,color_expected=False,file = directory+"GRAD_features.png")
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),   EXPECTED,title="Grad*Input",annot=False,color_expected=False,file = directory+"GRAD_features.png")
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index),   EXPECTED,title="Grad squared",annot=False,color_expected=False)
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index),   EXPECTED,title="IG",annot=False,color_expected=False,file = directory+"IG.png")
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index),   EXPECTED,title="Grad LM",annot=False,color_expected=False,file = directory+"GRAD_LM.png")
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index),   EXPECTED,title="IG LM",annot=False,color_expected=False,file = directory+"IG_LM.png")
-plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="Shapley",annot=False,color_expected=False,file = directory+"score_shapley.png")
+plot_aggregated(SCORE_shapley_aggregated,   EXPECTED,title="GraphSVX",annot=False,color_expected=False,file = directory+"score_shapley.png")
 
 
 plot_aggregated(aggregation_score_mean(SCORE_grad,species_index).iloc[:,:1+nb_groupe+POS+NEG],EXPECTED[:,:1+nb_groupe+POS+NEG],title="Grad",annot=False,file = directory+"GRAD_zoomed.png",sign=True)
-plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+nb_groupe+POS+NEG],   EXPECTED[:,:1+nb_groupe+POS+NEG],title="Grad*features",annot=False,file = directory+"GRAD_features_zoomed.png",sign=True)
+plot_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index).iloc[:,:1+nb_groupe+POS+NEG],   EXPECTED[:,:1+nb_groupe+POS+NEG],title="Grad*Input",annot=False,file = directory+"GRAD_features_zoomed.png",sign=True)
 #plot_aggregated(aggregation_score_mean(SCORE_grad**2,species_index).iloc[:,:1+POS+NEG],   EXPECTED[:,:1+POS+NEG],title="Grad squared")
 plot_aggregated(aggregation_score_mean(SCORE_IG1,species_index).iloc[:,:1+nb_groupe+POS+NEG],   EXPECTED[:,:1+nb_groupe+POS+NEG],title="IG",annot=False,file = directory+"IG_zoomed.png",sign=True)
 plot_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index).iloc[:,:1+nb_groupe+POS+NEG],   EXPECTED[:,:1+nb_groupe+POS+NEG],title="Grad LM",annot=False,file = directory+"GRAD_LM_zoomed.png",sign=True)
 plot_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index).iloc[:,:1+nb_groupe+POS+NEG],   EXPECTED[:,:1+nb_groupe+POS+NEG],title="IG LM",annot=False,file = directory+"IG_LM_zoomed.png",sign=True)
-plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+nb_groupe+POS+NEG], EXPECTED,title="Shapley",annot=False,file = directory+"score_shapley_zoomed.png",sign=True)
+plot_aggregated(SCORE_shapley_aggregated.iloc[:,:1+nb_groupe+POS+NEG], EXPECTED,title="GraphSVX",annot=False,file = directory+"score_shapley_zoomed.png",sign=True)
 
 
 
