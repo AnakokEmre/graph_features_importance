@@ -5,7 +5,7 @@ Emre Anakok
 
 # Simple simulation
 
-[View the HTML file](https://AnakokEmre.github.io/graph_features_importance/docs/Result.html)
+[View the HTML file](https://AnakokEmre.github.io/graph_features_importance/simulation/results/Result.html)
 
 In the following simulations, we generate bipartite networks by first
 simulating the corresponding latent space. The latent space, or a
