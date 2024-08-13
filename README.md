@@ -10,7 +10,7 @@ simulating the corresponding latent space. The latent space, or a
 transformation of it, will be use as covariates in the model. The key
 difference between simulation settings is not the network generation
 method, but the manner in which the available covariates are
-incorporated into the model.
+incorporated into the model. 
 
 [Simple simulation results](https://AnakokEmre.github.io/graph_features_importance/simulation/results/Result.html)
 
