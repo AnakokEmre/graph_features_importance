@@ -879,7 +879,7 @@ for k in range(K):
     #np.random.seed(1)
     POS = 3 
     NEG = 3 
-    ZERO = 1
+    ZERO = 3
     x1_1 = np.random.normal(size=(n1,POS))
     x1_2 = np.random.normal(size=(n1,NEG))
     x1_3 = np.random.normal(size=(n1,ZERO))

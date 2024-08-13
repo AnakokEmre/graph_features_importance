@@ -5,6 +5,8 @@ Emre Anakok
 
 # Simple simulation
 
+[View the HTML file](https://AnakokEmre.github.io/graph_features_importance/simulation/results/Result.html)
+
 In the following simulations, we generate bipartite networks by first
 simulating the corresponding latent space. The latent space, or a
 transformation of it, will be use as covariates in the model. The key
