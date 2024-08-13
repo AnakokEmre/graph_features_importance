@@ -579,7 +579,8 @@ display: none;
 </div>
 
 
-<p>##Network generation</p>
+<div id="network-generation" class="section level2">
+<h2>Network generation</h2>
 <p>In the following simulations, we generate bipartite networks by first
 simulating the corresponding latent space. The latent space, or a
 transformation of it, will be use as covariates in the model. The key
@@ -590,7 +591,7 @@ incorporated into the model.</p>
 <span class="math inline">\(Z_1^-\in\mathbb{R}^{n_1 \times D_-}\)</span>
 such as <span class="math inline">\(Z_{1_{i,j}}^+\overset{i.i.d.}{\sim}
 \mathcal{N}(0,1)\)</span> and <span class="math inline">\(Z_{1_{i,j}}^-\overset{i.i.d.}{\sim}
-\mathcal{N}(0,1)\)</span> independant of <span class="math inline">\(Z_1^+\)</span>. Let <span class="math inline">\(Z_1 = \left[Z_1^+| Z_1^- \right]\)</span> be the
+\mathcal{N}(0,1)\)</span> independent of <span class="math inline">\(Z_1^+\)</span>. Let <span class="math inline">\(Z_1 = \left[Z_1^+| Z_1^- \right]\)</span> be the
 concatenation of <span class="math inline">\(Z_1^+\)</span> and <span class="math inline">\(Z_1^-\)</span>. Let <span class="math inline">\(Z_2\in\mathbb{R}^{n_2 \times D}\)</span> such as
 <span class="math inline">\(Z_{2_{i,j}}^+\overset{i.i.d.}{\sim}
 \mathcal{N}(1,1)\)</span>. For <span class="math inline">\(1\leq i\leq
@@ -604,6 +605,7 @@ nodes latent representation of the generated network. Given how the
 network is constructed, higher values of <span class="math inline">\(Z_1^+\)</span> are expected to be positively
 correlated with connectivity, while higher values of <span class="math inline">\(Z_1^-\)</span> are expected to be negatively
 correlated with connectivity.</p>
+</div>
 <div id="gnn-inputs" class="section level2">
 <h2>GNN inputs</h2>
 <p>In the following part, we summarize how we construct the observed
@@ -622,13 +624,16 @@ by <span class="math inline">\(\gamma\)</span> can change depending on
 the simulation setting. For <span class="math inline">\(1\leq i \leq
 n_1, 1\leq j \leq D\)</span>, let <span class="math inline">\(X\)</span>
 such as <span class="math display">\[X_{i,j}=\gamma_{Q[i],j}Z_{i,j}.\]</span> Finally,
-we define <span class="math display">\[X_1 =
-\left[\mathbf{1}_{n_1}|X|X^0 \right]\]</span> where <span class="math inline">\(\mathbf{1}_{n_1}\)</span> is one column matrix
-only made of ones. <span class="math inline">\(X_2 =
-\mathbf{1}_{n_2}\)</span>. BGVAE is trained with adjacency matrix <span class="math inline">\(B\)</span> and covariates <span class="math inline">\(X_1,X_2\)</span>. The learning can also be done
-with the fair-BGVAE. In this case, some input columns of <span class="math inline">\(X_1\)</span> are selected and the learning is
-penalized by the HSIC between the estimated latent space and these
-columns. Once the model trained, previously described attribution
+we define <span class="math display">\[X_1 = \left[H|X|X^0
+\right]\]</span> where <span class="math inline">\(H\)</span> is the
+intercept. <span class="math inline">\(X_2 = \mathbf{1}_{n_2}\)</span>
+is a column made of <span class="math inline">\(1\)</span>. BGVAE is
+trained with adjacency matrix <span class="math inline">\(B\)</span> and
+covariates <span class="math inline">\(X_1,X_2\)</span>. The learning
+can also be done with the fair-BGVAE. In this case, some input columns
+of <span class="math inline">\(X_1\)</span> are selected and the
+learning is penalized by the HSIC between the estimated latent space and
+these columns. Once the model trained, previously described attribution
 methods are fit on <span class="math inline">\(f_{\widehat{B}}(X_1)\)</span> to study the impact
 of the features of <span class="math inline">\(X_1\)</span> on
 connectivity.</p>
