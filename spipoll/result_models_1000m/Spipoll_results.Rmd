@@ -1,0 +1,352 @@
+---
+title: "Spipoll Results"
+author: "Emre Anakok"
+date: "2024-08-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(kableExtra)
+library(stringr)
+```
+We consider the observation period of the Spipoll data set from 2010 to 2020 included, in metropolitan France. We consider a total of $n_1=26267$ observation sessions, where $n_2=306$ taxa of insects and $u=83$ genus of plants have been observed. The observation session-insect matrix $B$ has a total of 203 244 interactions reported, and the plant-insect matrix $B'$ has 13 127 different interactions. Both BVGAE and its fair counterpart are trained on the data set, with $D_+ = D_- = 6$. For the fair BVGAE, we  define the protected variable as the number of participation from the user at observation time. This number of participation would work as a proxy of the user's experience. By employing this measure, we hope to construct a latent space that remains unaffected by variations in observers' experience levels.
+
+The date and place of observations allowed us to extract corresponding climatic conditions as covariates, from the European Copernicus Climate data set, and the corresponding land use proportion with the Corine Land Cover (CLC). The covariates related to the observations sessions are $X_1 = (P,t,\Delta_T,CLC)$ where $P$ is a binarized categorical variable  (83 columns) giving the plant genus, $t$ contains the day and the year of observation, $\Delta_T$ is the difference between the average temperature on the day of observation and the average of temperatures measured from 1950 to 2010 at the same observation location and $CLC$ describes the proportion of land use with 44 categories in a 1000m radius around the observation location. To remove noise, which decreases the performance of the feature importance methods, we consider only 17 of the 44 categories, retaining those where the proportion exceeds 10\% at least 5\% of the time.
+
+We fit BVGAE on the data set 30 times before applying to each trained GNN a method to assess feature importance aggregated by plant. Aggregated features were ranked from most to least important, and the median rank for each feature was calculated. The results presented in the following table are sorted by median rank. "Median score" is the score estimated by the method,  "Grad sign" is the proportion of times where the **Grad** method has estimated a positive effect on connectivity.
+
+# GNN Model {.tabset}
+
+## BVGAE
+
+### Feature importance method {.tabset}
+
+#### Grad LM
+
+```{r}
+res_grad_LM = read.table("res_grad_LM.csv",header=T,sep=",",row.names = 1)
+res_grad_LM$median_rank = res_grad_LM$median_rank+1
+res_grad_LM$median_score = as.character(signif(res_grad_LM$median_score ,3))
+res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"]=paste0("+",res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"])
+res_grad_LM$features = str_replace_all(res_grad_LM$features, "_"," ")
+colnames(res_grad_LM) = c("Median rank","Median score","Plant","Features","Ecological Rank","Land use Rank","Grad sign","Reduced Score")
+
+```
+
+##### Rankings{.tabset}
+###### All
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Ecological
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[!is.na(res_grad_LM$`Ecological Rank`),]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Land use
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[!is.na(res_grad_LM$`Land use Rank`),]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Temperature
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[res_grad_LM$Features=="Temperature",]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Year
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[res_grad_LM$Features=="Y",]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+
+#### Grad Input
+
+```{r}
+res_grad_LM = read.table("res_grad_feature.csv",header=T,sep=",",row.names = 1)
+res_grad_LM$median_rank = res_grad_LM$median_rank+1
+res_grad_LM$median_score = as.character(signif(res_grad_LM$median_score ,3))
+res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"]=paste0("+",res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"])
+res_grad_LM$features = str_replace_all(res_grad_LM$features, "_"," ")
+colnames(res_grad_LM) = c("Median rank","Median score","Plant","Features","Ecological Rank","Land use Rank","Grad sign","Reduced Score")
+
+```
+
+##### Rankings{.tabset}
+###### All
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Ecological
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[!is.na(res_grad_LM$`Ecological Rank`),]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Land use
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[!is.na(res_grad_LM$`Land use Rank`),]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Temperature
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[res_grad_LM$Features=="Temperature",]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Year
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[res_grad_LM$Features=="Y",]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+
+#### Integrated Gradient
+
+```{r}
+res_grad_LM = read.table("res_IG1.csv",header=T,sep=",",row.names = 1)
+res_grad_LM$median_rank = res_grad_LM$median_rank+1
+res_grad_LM$median_score = as.character(signif(res_grad_LM$median_score ,3))
+res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"]=paste0("+",res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"])
+res_grad_LM$features = str_replace_all(res_grad_LM$features, "_"," ")
+colnames(res_grad_LM) = c("Median rank","Median score","Plant","Features","Ecological Rank","Land use Rank","Grad sign","Reduced Score")
+
+```
+
+##### Rankings{.tabset}
+###### All
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Ecological
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[!is.na(res_grad_LM$`Ecological Rank`),]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Land use
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[!is.na(res_grad_LM$`Land use Rank`),]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Temperature
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[res_grad_LM$Features=="Temperature",]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Year
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[res_grad_LM$Features=="Y",]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+
+
+## Fair BVGAE
+
+### Feature importance method {.tabset}
+
+#### Grad LM
+
+```{r}
+res_grad_LM = read.table("fair_grad_LM.csv",header=T,sep=",",row.names = 1)
+res_grad_LM$median_rank = res_grad_LM$median_rank+1
+res_grad_LM$median_score = as.character(signif(res_grad_LM$median_score ,3))
+res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"]=paste0("+",res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"])
+res_grad_LM$features = str_replace_all(res_grad_LM$features, "_"," ")
+colnames(res_grad_LM) = c("Median rank","Median score","Plant","Features","Ecological Rank","Land use Rank","Grad sign","Reduced Score")
+
+```
+
+##### Rankings{.tabset}
+###### All
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Ecological
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[!is.na(res_grad_LM$`Ecological Rank`),]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Land use
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[!is.na(res_grad_LM$`Land use Rank`),]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Temperature
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[res_grad_LM$Features=="Temperature",]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Year
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[res_grad_LM$Features=="Y",]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+
+#### Grad Input
+
+```{r}
+res_grad_LM = read.table("fair_grad_feature.csv",header=T,sep=",",row.names = 1)
+res_grad_LM$median_rank = res_grad_LM$median_rank+1
+res_grad_LM$median_score = as.character(signif(res_grad_LM$median_score ,3))
+res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"]=paste0("+",res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"])
+res_grad_LM$features = str_replace_all(res_grad_LM$features, "_"," ")
+colnames(res_grad_LM) = c("Median rank","Median score","Plant","Features","Ecological Rank","Land use Rank","Grad sign","Reduced Score")
+
+```
+
+##### Rankings{.tabset}
+###### All
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Ecological
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[!is.na(res_grad_LM$`Ecological Rank`),]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Land use
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[!is.na(res_grad_LM$`Land use Rank`),]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Temperature
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[res_grad_LM$Features=="Temperature",]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Year
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[res_grad_LM$Features=="Y",]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+
+#### Integrated Gradient
+
+```{r}
+res_grad_LM = read.table("fair_IG1.csv",header=T,sep=",",row.names = 1)
+res_grad_LM$median_rank = res_grad_LM$median_rank+1
+res_grad_LM$median_score = as.character(signif(res_grad_LM$median_score ,3))
+res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"]=paste0("+",res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"])
+res_grad_LM$features = str_replace_all(res_grad_LM$features, "_"," ")
+colnames(res_grad_LM) = c("Median rank","Median score","Plant","Features","Ecological Rank","Land use Rank","Grad sign","Reduced Score")
+
+```
+
+##### Rankings{.tabset}
+###### All
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Ecological
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[!is.na(res_grad_LM$`Ecological Rank`),]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Land use
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[!is.na(res_grad_LM$`Land use Rank`),]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Temperature
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[res_grad_LM$Features=="Temperature",]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
+###### Year
+```{r}
+table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
+table1 = table1[res_grad_LM$Features=="Y",]
+kable(table1,digits=2,row.names = FALSE)%>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(3, width = "10em")
+```
