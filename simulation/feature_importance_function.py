@@ -26,7 +26,7 @@ from HSIC import *
 from feature_importance_function import *
 import networkx as nx
 import scipy
-
+from matplotlib.colors import LinearSegmentedColormap
 #os.environ['CUDA_VISIBLE_DEVICES'] = ""
 
 import pandas
@@ -280,7 +280,7 @@ def train_model(adj0,features01,features02,GRDPG=0,latent_dim=2,niter= 1000,fair
 
 
 
-def plot_score(SCORE,POS,NEG,ZERO,title="score",intercept=1,file = None, fontsize=10,HSIC= None):
+def plot_score(SCORE,POS,NEG,ZERO,title="score",intercept=1,file = None, fontsize=20,HSIC= None):
     X = np.arange(SCORE.shape[-1])
     markers = len(X) * ["o"]
     if HSIC is not None:
@@ -303,7 +303,7 @@ def plot_score(SCORE,POS,NEG,ZERO,title="score",intercept=1,file = None, fontsiz
     
 
 
-def plot_aggregated(SCORE,EXPECTED=None,title="score",annot=True,sign=False,color_expected=True,file = None, fontsize=10,zero=None,intercept=1):
+def plot_aggregated(SCORE,EXPECTED=None,title="score",annot=True,sign=False,color_expected=True,file = None, fontsize=20,zero=None,intercept=1):
     data1 = SCORE.values.astype("float")
     if EXPECTED is None:
         EXPECTED = (data1*0).values.astype("float") 

@@ -21,11 +21,19 @@ Let $n_1= 1000$ and $n_2=100$, let $D_+$ be an integer, let $D_- = D_+$ and let 
 
 ## GNN inputs
 
-In the following part, we summarize how we construct the observed $X_1$ that will be use as a covariate to fit the model. To improve readability, we will change the notation from $Z_1$ to $Z$. Let $D_0$ be an integer and let $X_1^0 \in \mathbb{R}^{n_1 \times D_0}$ be a noise matrix  with ${X}^0_{i,j}\overset{i.i.d.}{\sim} \mathcal{N}(0,1)$. The $n_1$ row nodes are partitioned into $K$ groups, node $i$ belongs to group $Q[i]$ with $Q[i]\in \{1,\dots,K\}$. If there are no groups, then $K=1$. For $1\leq k \leq K, 1\leq j \leq D$, $\gamma_{k,j}\in \{-1,0,1\}$ describes the combined effect of group $k$ on the covariate $j$. The set of value taken by $\gamma$ can change depending on the simulation setting. For $1\leq i \leq n_1, 1\leq j \leq D$, let $X$ such as $$X_{i,j}=\gamma_{Q[i],j}Z_{i,j}.$$ Finally, we define $$X_1 = \left[H|X|X^0 \right]$$ where $H$ is the intercept. $X_2 = \mathbf{1}_{n_2}$ is a column made of $1$.  BGVAE is trained with adjacency matrix $B$ and covariates $X_1,X_2$. The learning can also be done with the fair-BGVAE. In this case, some input columns of $X_1$ are selected and the learning is penalized by the HSIC between the estimated latent space and these columns. Once the model trained, previously described attribution methods are fit on $f_{\widehat{B}}(X_1)$ to study the impact of the features of $X_1$ on connectivity.
+In the following part, we summarize how we construct the observed $X_1$ that will be use as a covariate to fit the model. To improve readability, we will change the notation from $Z_1$ to $Z$. Let $D_0$ be an integer and let $X_1^0 \in \mathbb{R}^{n_1 \times D_0}$ be a noise matrix  with ${X}^0_{i,j}\overset{i.i.d.}{\sim} \mathcal{N}(0,1)$. The $n_1$ row nodes are partitioned into $K$ groups, node $i$ belongs to group $Q[i]$ with $Q[i]\in \{1,\dots,K\}$. If there are no groups, then $K=1$. For $1\leq k \leq K, 1\leq j \leq D$, $\gamma_{k,j}\in \{-1,0,1\}$ describes the combined effect of group $k$ on the covariate $j$. The set of value taken by $\gamma$ can change depending on the simulation setting. For $1\leq i \leq n_1, 1\leq j \leq D$, let $X$ such as $$
+ X_{i,j}= \left\{
+    \begin{array}{ll}
+        \ \gamma_{Q[i],j}Z_{i,j}& \mbox{if } \gamma_{Q[i],j}\neq 0 \\
+        \\
+        \xi_{i,j}\mbox{ with } \xi_{i,j}\overset{i.i.d.}{\sim} \mathcal{N}(0,1) & \mbox{if }  \gamma_{Q[i],j}=0
+    \end{array}
+\right.
+$$Finally, we define $$X_1 = \left[H|X|X^0 \right]$$ where $H$ is the intercept. $X_2 = \mathbf{1}_{n_2}$ is a column made of $1$.  BGVAE is trained with adjacency matrix $B$ and covariates $X_1,X_2$. The learning can also be done with the fair-BGVAE. In this case, some input columns of $X_1$ are selected and the learning is penalized by the HSIC between the estimated latent space and these columns. Once the model trained, previously described attribution methods are fit on $f_{\widehat{B}}(X_1)$ to study the impact of the features of $X_1$ on connectivity.
 
 ## Settings
 
-Parameter settings are presented in the following table. We remind that the true latent space is of size $D = D_+ + D_-$ with $D_+ = D_- $, and $D_0$ is the number of the noise covariates. $K$ is the number of groups. $\Gamma$ represents the set of value possibily taken by $\gamma$. The HSIC columns determine how much columns of $X_1$ are penalized by the HSIC during the learning of the Fair BVGAE, empty values correspond to classical BVGAE learning. $H$ corresponds to the intercept.
+Parameter settings are presented in the following table. We remind that the true latent space is of size $D = D_+ + D_-$ with $D_+ = D_-$, and $D_0$ is the number of the noise covariates. $K$ is the number of groups. $\Gamma$ represents the set of value possibily taken by $\gamma$. The HSIC columns determine how much columns of $X_1$ are penalized by the HSIC during the learning of the Fair BVGAE, empty values correspond to classical BVGAE learning. $H$ corresponds to the intercept.
 
 ```{r,echo=FALSE}
 table_settings1 = data.frame(row.names = 0:13)
@@ -55,15 +63,18 @@ kable(table_settings1,booktabs=TRUE,escape = FALSE,align="c",caption ="Parameter
 
 ## Results {.tabset}
 
+For all simulations, the AUC for link prediction with and without covariates are displayed to demonstrate the impact of covariates on the model's learning.
+
+
 ### Simulation 0 
 
-Simulation la plus simple
+Easiest simulation
 
-* 3 covariables ont un effet positif
-* 3 covariables ont un effet négatif
-* 3 covariables sont sans effet
+* 3 covariates have a positive effect
+* 3 covariates have a negative effect
+* 3 covariates have no effect
 
-* L'algorithme est entrainé avec toutes les covariables
+* The algorithm is trained with all the covariates
 
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
@@ -71,17 +82,23 @@ X=read.table("results_for_rmd/res0/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
+
+* The dashed line is positioned at zero. 
+* The black dot represents the estimated score for the intercept. 
+* The green dots represent the estimated score for features where positive values are expected.
+* The red dots represent the estimated score for features where negative values are expected.
+* The blue dots are scores attributed to noise. 
 
 
 ![](results_for_rmd/res0/score_shapley.png)
@@ -94,33 +111,39 @@ kable(restable,digits = 2)
 
 ### Simulation 1 
 
+The network is generated with
 
-* 3 covariables ont un effet positif
-* 3 covariables ont un effet négatif
-* 3 covariables sont sans effet
+* 3 covariates have a positive effect
+* 3 covariates have a negative effect
 
-L'algorithme est entrainé avec 
+The algorithm is trained with
 
-* 2 covariables ayant un effet positif
-* 2 covariables ayant un effet négatif
-* 2 covariables sans effet
+* 2 covariates with positive effect
+* 2 covariates with negative effect
+* 3 covariates with no effect
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res1/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
+
+* The dashed line is positioned at zero. 
+* The black dot represents the estimated score for the intercept. 
+* The green dots represent the estimated score for features where positive values are expected.
+* The red dots represent the estimated score for features where negative values are expected.
+* The blue dots are scores attributed to noise. 
 
 
 ![](results_for_rmd/res1/score_shapley.png)
@@ -130,31 +153,40 @@ kable(restable,digits = 2)
 ![](results_for_rmd/res1/GRAD_LM.png)
 ![](results_for_rmd/res1/IG_LM.png)
 
+
+
 ### Simulation 2
 
 
-* 3 covariables ont un effet positif
-* 3 covariables ont un effet négatif
-* 50 covariables sont sans effet
+* 3 covariates have a positive effect
+* 3 covariates have a negative effect
+* 50 covariates have no effect
 
-* L'algorithme est entrainé avec toutes les covariables
+* The algorithm is trained with all the covariates
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res2/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
+
+* The dashed line is positioned at zero. 
+* The black dot represents the estimated score for the intercept. 
+* The green dots represent the estimated score for features where positive values are expected.
+* The red dots represent the estimated score for features where negative values are expected.
+* The blue dots are scores attributed to noise. 
+
 
 ![](results_for_rmd/res2/score_shapley.png)
 ![](results_for_rmd/res2/GRAD.png)
@@ -166,16 +198,18 @@ kable(restable,digits = 2)
 
 ### Simulation 3
 
+The network is generated with
 
-* 3 covariables ont un effet positif
-* 3 covariables ont un effet négatif
-* 50 covariables sont sans effet
+* 3 covariates with a positive effect
+* 3 covariates with a negative effect
 
-* L'algorithme est entrainé avec 
+The algorithm is trained with
 
-* 2 covariables ayant un effet positif
-* 2 covariables ayant un effet négatif
-* 50 covariables sans effet
+* 2 covariates with positive effect
+* 2 covariates with negative effect
+* 50 covariates have no effect
+
+
 
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
@@ -183,18 +217,23 @@ X=read.table("results_for_rmd/res3/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
+* The dashed line is positioned at zero. 
+* The black dot represents the estimated score for the intercept. 
+* The green dots represent the estimated score for features where positive values are expected.
+* The red dots represent the estimated score for features where negative values are expected.
+* The blue dots are scores attributed to noise. 
 
 
 ![](results_for_rmd/res3/score_shapley.png)
@@ -208,10 +247,11 @@ kable(restable,digits = 2)
 ### Simulation 4
 
 
+* 1 covariate has an effect (+ or -) that depends on a group
+* 1 covariate has a negative effect
+* 1 covariate has no effect
 
-* 1 covariable a un effet qui dépend d'un groupe
-* 1 covariable a un effet négatif
-* 1 covariable sans effet
+* The algorithm is trained with all the covariates
 
 ![](results_for_rmd/res4/fig0.png)
 ![](results_for_rmd/res4/fig1.png)
@@ -223,19 +263,24 @@ X=read.table("results_for_rmd/res4/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
+For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
+* The black frames represent the estimated score for the intercept,
+* The green  frames represent the score for features where positive values are expected
+* The red frames represent the score for features negative values are expected
+* The blue frames are scores attributed to noise. 
 
 ![](results_for_rmd/res4/score_shapley.png)
 ![](results_for_rmd/res4/GRAD.png)
@@ -253,8 +298,8 @@ kable(restable,digits = 2)
 
 
 
-* 6 covariables ont un effet qui dépend d'un groupe (positif/négatif)
-* 50 covariables sans effet
+* 6 covariates have an effect (+ or -) that depends on a group
+* 50 covariates have no effect
 
 
 
@@ -264,18 +309,24 @@ X=read.table("results_for_rmd/res5/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
+For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
+
+* The black frames represent the estimated score for the intercept,
+* The green  frames represent the score for features where positive values are expected
+* The red frames represent the score for features negative values are expected
+* The blue frames are scores attributed to noise. 
 
 
 ![](results_for_rmd/res5/score_shapley.png)
@@ -298,8 +349,8 @@ kable(restable,digits = 2)
 
 ### Simulation 6
 
-* 6 covariables ont un effet qui dépend d'un groupe (positif/négatif/nul)
-* 6 covariables sans effet
+* 6 covariates have an effect (+ or - or 0) that depends on a group
+* 6 covariates have no effect
 
 
 
@@ -310,18 +361,24 @@ X=read.table("results_for_rmd/res6/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
+For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
+
+* The black frames represent the estimated score for the intercept,
+* The green  frames represent the score for features where positive values are expected
+* The red frames represent the score for features negative values are expected
+* The blue frames are scores attributed to noise. 
 
 
 ![](results_for_rmd/res6/score_shapley.png)
@@ -345,9 +402,10 @@ kable(restable,digits = 2)
 
 ### Simulation 7
 
-* 6 covariables ont un effet qui dépend d'un groupe (positif/négatif)
-* 6 covariables sans effet
-* on passe le groupe en covariable
+* 6 covariates have an effect (+ or -) that depends on a group
+* 6 covariates have no effect
+
+* the group is included as a covariate
 
 
 
@@ -357,19 +415,25 @@ X=read.table("results_for_rmd/res7/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
+For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
+* The black frames represent the estimated score for the intercept,
+* The green  frames represent the score for features where positive values are expected
+* The red frames represent the score for features negative values are expected
+* The blue frames are scores attributed to noise.
+* The sign "+" or "-" denotes the sign of the estimated score within each cell.
 
 ![](results_for_rmd/res7/score_shapley.png)
 ![](results_for_rmd/res7/GRAD.png)
@@ -393,9 +457,9 @@ kable(restable,digits = 2)
 
 ### Simulation 8
 
-* 6 covariables ont un effet qui dépend d'un groupe (positif/négatif/nul)
-* 6 covariables sans effet
-* 4 groupes avec des effets différents 
+* 6 covariates have an effect (+ or - or 0) that depends on a group
+* 6 covariates have no effect
+* 4 groups with different effects
 
 
 
@@ -405,19 +469,25 @@ X=read.table("results_for_rmd/res8/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
+For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
+* The black frames represent the estimated score for the intercept,
+* The green  frames represent the score for features where positive values are expected
+* The red frames represent the score for features negative values are expected
+* The blue frames are scores attributed to noise.
+* The sign "+" or "-" denotes the sign of the estimated score within each cell.
 
 ![](results_for_rmd/res8/score_shapley.png)
 ![](results_for_rmd/res8/GRAD.png)
@@ -440,10 +510,11 @@ kable(restable,digits = 2)
 
 ### Simulation 9
 
-* 6 covariables ont un effet qui dépend d'un groupe (positif/négatif/nul)
-* 6 covariables sans effet
-* 4 groupes avec des effets différents 
-* les 4 groupes sont mis en covariables 
+* 6 covariates have an effect (+ or - or 0) that depends on a group
+* 6 covariates have no effect
+* 4 groups with different effects
+
+* the group is included as a covariate
 
 
 
@@ -453,19 +524,24 @@ X=read.table("results_for_rmd/res9/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
+For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
+* The black frames represent the estimated score for the intercept,
+* The green  frames represent the score for features where positive values are expected
+* The red frames represent the score for features negative values are expected
+* The blue frames are scores attributed to noise.
 
 ![](results_for_rmd/res9/score_shapley.png)
 ![](results_for_rmd/res9/GRAD.png)
@@ -487,13 +563,13 @@ kable(restable,digits = 2)
 
 ### Simulation 10
 
-* 3 covariables ont un effet positif
-* 3 covariables ont un effet négatif
-* 1 covariable sans effet
-* la premiere covariable avec effet positif et celle avec effet négatif sont mises avec le HSIC
 
-l'objectif est de voir si les scores attribués aux variables avec le HSIC sont plus petits que les autres. 
+* 3 covariates have a positive effect
+* 3 covariates have a negative effect
+* 3 covariates have no effect
+* The first covariate with a positive effect and the one with a negative effect are penalized with the HSIC
 
+The goal is to see if the scores assigned to the variables penalized by the HSIC are smaller than the others.
 
 
 
@@ -502,18 +578,24 @@ X=read.table("results_for_rmd/res10/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
+* The dashed line is positioned at zero. 
+* The black dot represents the estimated score for the intercept. 
+* The green dots represent the estimated score for features where positive values are expected.
+* The red dots represent the estimated score for features where negative values are expected.
+* The blue dots are scores attributed to noise. 
+* Variables penalized by the HSIC are represented with a cross.
 
 
 ![](results_for_rmd/res10/score_shapley.png)
@@ -528,10 +610,11 @@ kable(restable,digits = 2)
 
 ### Simulation 11
 
-* Certaines variables ont un effet positif ou négatif en fonction du groupe auquel il appartient
-* la premiere covariable avec effet positif et celle avec effet négatif sont mises avec le HSIC
+* 8 covariates have an effect (+ or -) that depends on a group
+* 50 covariates have no effect
+* The first covariate with a positive effect and the one with a negative effect are penalized with the HSIC
 
-l'objectif est de voir si les scores attribués aux variables avec le HSIC sont plus petits que les autres.  
+The goal is to see if the scores assigned to the variables penalized by the HSIC are smaller than the others.
 
 
 
@@ -541,19 +624,24 @@ X=read.table("results_for_rmd/res11/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
+For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
+* The black frames represent the estimated score for the intercept,
+* The green  frames represent the score for features where positive values are expected
+* The red frames represent the score for features negative values are expected
+* The blue frames are scores attributed to noise or to variable penalized by the HSIC. 
 
 ![](results_for_rmd/res11/score_shapley.png)
 ![](results_for_rmd/res11/GRAD.png)
@@ -570,17 +658,16 @@ kable(restable,digits = 2)
 ![](results_for_rmd/res11/GRAD_features_zoomed.png)
 ![](results_for_rmd/res11/IG_zoomed.png)
 ![](results_for_rmd/res11/GRAD_LM_zoomed.png)
+![](results_for_rmd/res11/IG_LM_zoomed.png)
 
 
 
 ### Simulation 12
-Similaire à simulation 8 mais avec HSIC
 
-* Il y a 4 groupes
-* Certaines variables ont un effet positif ou négatif ou nul en fonction du groupe auquel il appartient
-* la premiere covariable avec effet positif et celle avec effet négatif sont mises avec le HSIC
-
-l'objectif est de voir si les scores attribués aux variables avec le HSIC sont plus petits que les autres.  
+* 8 covariates have an effect (+ or - or 0) that depends on a group
+* 8 covariates have no effect
+* 4 groups with different effects
+* 2 covariates are penalized with the HSIC
 
 
 
@@ -590,19 +677,25 @@ X=read.table("results_for_rmd/res12/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
+For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
+* The black frames represent the estimated score for the intercept,
+* The green  frames represent the score for features where positive values are expected
+* The red frames represent the score for features negative values are expected
+* The blue frames are scores attributed to noise or to variable penalized by the HSIC. 
+* The sign "+" or "-" denotes the sign of the estimated score within each cell.
 
 ![](results_for_rmd/res12/score_shapley.png)
 ![](results_for_rmd/res12/GRAD.png)
@@ -619,16 +712,17 @@ kable(restable,digits = 2)
 ![](results_for_rmd/res12/GRAD_features_zoomed.png)
 ![](results_for_rmd/res12/IG_zoomed.png)
 ![](results_for_rmd/res12/GRAD_LM_zoomed.png)
+![](results_for_rmd/res12/IG_LM_zoomed.png)
 
 ### Simulation 13
 
 
-Similaire à simulation 9 mais avec HSIC
+* 8 covariates have an effect (+ or - or 0) that depends on a group
+* 8 covariates have no effect
+* 4 groups with different effects
+* 2 covariates are penalized with the HSIC
+* the group is included as a covariate
 
-* Il y a 4 groupes
-* Certaines variables ont un effet positif ou négatif ou nul en fonction du groupe auquel il appartient
-* la premiere covariable avec effet positif et celle avec effet négatif sont mises avec le HSIC
-* les groupes sont passés en covariables (one hot encoded)
 
 
 
@@ -639,19 +733,25 @@ X=read.table("results_for_rmd/res13/res.csv",sep=",",header=T,row.names = 1)
 ```
 
 ```{r,echo=FALSE}
-print(paste0("AUC sans covariables : " , round(mean(X$AUC0),3) ))
-print(paste0("AUC avec covariables : " , round(mean(X$AUC1),3) ))
+print(paste0("AUC without covariates: " , round(mean(X$AUC0),3) ))
+print(paste0("AUC with covariates: " , round(mean(X$AUC1),3) ))
 ```
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[3:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("Shapley","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
+For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
+* The black frames represent the estimated score for the intercept,
+* The green  frames represent the score for features where positive values are expected
+* The red frames represent the score for features negative values are expected
+* The blue frames are scores attributed to noise or to variable penalized by the HSIC. 
+* The sign "+" or "-" denotes the sign of the estimated score within each cell.
 
 ![](results_for_rmd/res13/score_shapley.png)
 ![](results_for_rmd/res13/GRAD.png)
@@ -668,3 +768,5 @@ kable(restable,digits = 2)
 ![](results_for_rmd/res13/GRAD_features_zoomed.png)
 ![](results_for_rmd/res13/IG_zoomed.png)
 ![](results_for_rmd/res13/GRAD_LM_zoomed.png)
+![](results_for_rmd/res13/IG_LM_zoomed.png)
+

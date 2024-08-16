@@ -218,13 +218,7 @@ def aggregation_shapley_score(model,features01,features02,adj_norm,SP,k,n_repeat
 
 
 
-def train_model(adj0,features01,features02,species_index,bipartite_net,
-                GRDPG=0,
-                latent_dim=2,
-                niter= 1000,
-                fair=None,
-                delta=1,
-                seed=0):
+def train_model(adj0,features01,features02,species_index,bipartite_net,GRDPG=0,latent_dim=2,niter= 1000,fair=None,delta=1,seed=0):
     adj = sp.csr_matrix(adj0) 
     features1 = sparsify(features01)
     features2 = sparsify(features02)
@@ -314,11 +308,22 @@ def train_model(adj0,features01,features02,species_index,bipartite_net,
 
 
 
-def plot_score(SCORE,POS,NEG,ZERO,title="score",intercept=1,file = None):
+def plot_score(SCORE,POS,NEG,ZERO,title="score",intercept=1,fontsize=20,file = None,HSIC= None):
     X = np.arange(SCORE.shape[-1])
-    plt.scatter(X,SCORE ,c= intercept*["black"]+POS*["green"]+NEG*["red"]+ZERO*["blue"])
+    markers = len(X) * ["o"]
+    if HSIC is not None:
+        for i in HSIC:
+            markers[i] = "x"
+    
+    colors= intercept*["black"]+POS*["green"]+NEG*["red"]+ZERO*["blue"]
+    #plt.scatter(X,SCORE,marker=markers ,c= intercept*["black"]+POS*["green"]+NEG*["red"]+ZERO*["blue"])
+    
+    for i in range(len(X)):
+        plt.scatter(X[i], SCORE[i], color=colors[i], marker=markers[i])
+    
+    
     plt.axhline(y=0, linestyle='--')
-    plt.title(title)
+    plt.title(title,fontsize = fontsize)
     if file is not None:
         plt.savefig(file)
     plt.show()
@@ -326,17 +331,26 @@ def plot_score(SCORE,POS,NEG,ZERO,title="score",intercept=1,file = None):
     
 
 
-def plot_aggregated(SCORE,EXPECTED=None,title="score",annot=True,sign=False,color_expected=True,file = None):
+def plot_aggregated(SCORE,EXPECTED=None,title="score",annot=True,sign=False,color_expected=True,file = None, fontsize=20,zero=None,intercept=1):
     data1 = SCORE.values.astype("float")
     if EXPECTED is None:
         EXPECTED = (data1*0).values.astype("float") 
     data2 = EXPECTED
     
+    colors0 = [
+        (0, 'red'),   # Red at -1
+        (0.5, 'blue'),   # Blue at 0
+        (1, 'green')   # Green at 1
+    ]
+    custom_cmap = LinearSegmentedColormap.from_list('custom_cmap', colors0, N=100)
     # Create a heatmap with the first dataset
     annot2 = annot and not sign
-    ax = sns.heatmap(data1, annot=annot2, cbar=True,center=0, square=True, linewidths=0)
-    
+    ax = sns.heatmap(data1,alpha=0.6, annot=annot2,cmap=custom_cmap, cbar=True,center=0, square=True, linewidths=0)
+    if zero is not None:
+        ax.axvline(x=zero, linewidth=4, color="red")
     # Add colored frames based on the second dataset
+    
+   
     num_rows, num_cols = data1.shape
     if color_expected:
         for i in range(num_rows):
@@ -346,7 +360,11 @@ def plot_aggregated(SCORE,EXPECTED=None,title="score",annot=True,sign=False,colo
                 # Normalize the value for color mapping
                 normalized_value = (value - data2.min()) / (data2.max() - data2.min())
                 #color = plt.cm.viridis(normalized_value)  # Using the 'viridis' colormap
-                color = plt.cm.coolwarm(normalized_value)
+                #color = plt.cm.coolwarm(normalized_value)
+                if j < intercept:
+                    color = (0.,0.,0.,1.)
+                else :
+                    color = custom_cmap(normalized_value)
                 # Create a rectangle with the desired color
                 rect = plt.Rectangle(
                     [j+0.05, i+0.05], 0.9, 0.9, fill=False, edgecolor=color, linewidth=4
@@ -358,7 +376,7 @@ def plot_aggregated(SCORE,EXPECTED=None,title="score",annot=True,sign=False,colo
                     
     
     # Show the plot
-    plt.title(title)
+    plt.title(title,fontsize=fontsize)
     if file is not None:
         plt.savefig(file)
     plt.show()

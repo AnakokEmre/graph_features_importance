@@ -1686,4 +1686,122 @@ RES15.to_csv("results/results_for_rmd/res15/res.csv")
 
 
 
+#%% Simulation 16
+##SCHEMA ULTIME !
+## La variable a un effet positif ou négatif, ou nul en fonction du groupe auquel il appartient
+## 83 groupe !!! !
+##HSIC sur la première variable positive et négative
+##Plus de ZEROOOOOOO 
+##les groupes sont passés en covariables
+
+
+
+K = 30
+RES0 = pandas.DataFrame(columns=["AUC0","AUC1",
+                                 "AUC3_0","AUC3_1",
+                                 "phi_pos","phi_neg","phi_odg",
+                                 "grad_pos","grad_neg","grad_odg",
+                                 "grad_feature_pos","grad_feature_neg","grad_feature_odg",
+                                 "IG1_pos","IG1_neg","IG1_odg",
+                                 "grad_LM_pos","grad_LM_neg","grad_LM_odg",
+                                 "IG1_LM_pos","IG1_LM_neg","IG1_LM_odg",
+                               ],index=range(K))
+for k in range(K):
+    print(k)  
+    
+ 
+    n01=83
+    n02=306
+    W1,W2,bipartite_net = simulate_lbm(n01, n02, alpha, beta, P) 
+    
+    n1=1000
+    species_index0 = np.random.randint(83,size=n1)
+    #np.random.seed(1)
+    POS = 4
+    NEG = 4
+    ZERO = 8
+    
+    nb_groupe = n01
+    species_index = species_index0
+    species_index_ind = np.eye(nb_groupe)[species_index]
+    #x1_1 = np.random.normal(loc = np.array([[-3,3,-3],[3,-3,3]])[species_index], size=(n1,POS))
+    #x1_2 = np.random.normal(loc = np.array([[-3,3,-3],[3,-3,3]])[species_index], size=(n1,POS))
+    x1_1 = np.random.normal(size=(n1,POS))
+    x1_2 = np.random.normal(size=(n1,NEG))
+    x1_3 = np.random.normal(size=(n1,ZERO))
+    Beta_0 = scipy.special.logit(0.05)
+    beta_POS =  1*np.ones(POS)
+    beta_NEG = -1*np.ones(NEG) 
+    
+    X = Beta_0 + x1_1@beta_POS + x1_2@beta_NEG
+    
+    P_k = 1/(1+np.exp(-X))
+    adj0 = np.zeros((n1,n02))
+    net_index=np.where(bipartite_net>0)
+    
+    for obs in range(n1):
+        possible = net_index[1][net_index[0]==species_index[obs]]
+        proba_possible =  P_k[obs]
+        observed = np.random.binomial(1,proba_possible,len(possible))
+        adj0[obs,possible] = observed
+    
+    
+    signe1 = np.array([-1,1])[np.random.randint(0,2,n01)]
+    signe2 = np.array([-1,1])[np.random.randint(0,2,n01)]
+    signe3 = np.array([-1,1])[np.random.randint(0,2,n01)]
+    signe4 = np.array([-1,1])[np.random.randint(0,2,n01)]
+    
+    
+    x1_1[:,2] = change_data_signe(x1_1[:,1],signe1,species_index) #2
+    x1_1[:,3] = change_data_signe(x1_1[:,2],signe2,species_index) #3
+    x1_2[:,2] = change_data_signe(x1_1[:,1],signe3,species_index) #2
+    x1_2[:,3] = change_data_signe(x1_1[:,2],signe4,species_index) #3
+    S = np.hstack([x1_1[:,0].reshape(-1,1),x1_2[:,0].reshape(-1,1)])
+    
+    
+    
+    #features01 = np.eye(adj0.shape[0])
+    #features02 = np.eye(adj0.shape[1])
+    
+    features01 = np.ones(shape=(adj0.shape[0],1))
+    features02 = np.ones(shape=(adj0.shape[1],1))
+    
+    model,features1,features2,adj_norm,SP,test_roc0,test_roc3_0 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 1000)
+    
+    features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),species_index_ind ,x1_1,x1_2,x1_3])
+    features02 = np.ones(shape=(adj0.shape[1],1))
+    
+    model,features1,features2,adj_norm,SP,test_roc1,test_roc3_1 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 1000)
+        
+
+    #SCORE_shapley = graph_shapley_score(model,features01,features02,adj_norm,SP,n_repeat = 1000)
+    SCORE_grad = GRAD_score(model,features01,features02,adj_norm,SP,n_repeat=50)
+    SCORE_IG1,SCORE_IG2 = IG_score(model,features01,features02,adj_norm,SP,m=201)
+    SCORE_shapley_aggregated = aggregation_shapley_score(model,features01,features02,adj_norm,SP,species_index,n_repeat = 2000)
+   
+    EXPECTED = np.zeros((nb_groupe,features01.shape[1]))
+    EXPECTED[:,2+nb_groupe]= 1
+    EXPECTED[:,3+nb_groupe]= signe1
+    EXPECTED[:,4+nb_groupe] = signe2
+
+    EXPECTED[:,6+nb_groupe]= -1
+    EXPECTED[:,7+nb_groupe]= -signe3
+    EXPECTED[:,8+nb_groupe]= -signe4
+    
+    
+    RES0.loc[k,["AUC0","AUC1"]] = test_roc0,test_roc1
+    RES0.loc[k,["AUC3_0","AUC3_1"]] = test_roc3_0,test_roc3_1
+    RES0.loc[k,["phi_pos","phi_neg","phi_odg"]] = return_scores_aggregated(SCORE_shapley_aggregated,EXPECTED,intercept = 1+ nb_groupe)
+    RES0.loc[k,["grad_pos","grad_neg","grad_odg"]] = return_scores_aggregated(aggregation_score_mean(SCORE_grad,species_index),EXPECTED,intercept = 1+ nb_groupe)
+    RES0.loc[k,["grad_feature_pos","grad_feature_neg","grad_feature_odg"]] = return_scores_aggregated(aggregation_score_mean(SCORE_grad*features01,species_index),EXPECTED,intercept = 1+ nb_groupe)
+    RES0.loc[k,["IG1_pos","IG1_neg","IG1_odg"]] = return_scores_aggregated(aggregation_score_mean(SCORE_IG1,species_index),EXPECTED,intercept = 1+ nb_groupe)
+    RES0.loc[k,["grad_LM_pos","grad_LM_neg","grad_LM_odg"]] = return_scores_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index),EXPECTED,intercept = 1+ nb_groupe)
+    RES0.loc[k,["IG1_LM_pos","IG1_LM_neg","IG1_LM_odg"]] = return_scores_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index),EXPECTED,intercept = 1+ nb_groupe)
+    print(RES0.mean(0).round(3))
+    
+RES16 = RES0.copy()
+#RES8.to_csv("results\\results_for_rmd\\res8\\res.csv")
+#RES15.to_csv("results/results_for_rmd/res15/res.csv")
+
+
 
