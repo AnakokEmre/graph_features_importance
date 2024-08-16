@@ -23,7 +23,7 @@ This simulation study tries to replicate numerically the sampling process taking
  Once the observations-insects network $B$ is constructed, we also have access to the observed plant-pollinator network $B$ and to $P_{i,k}$ the one-hot-encoded categorical variable that describes the plant taxonomy of the $i$-th sessions.
  Given how the network is constructed, higher values of $Z^+$ are expected to be positively correlated with connectivity, while higher values of $Z^-$ are expected to be negatively correlated with connectivity. The following simulations settings are similar to the previous ones, but are adapted to the Spipoll simulation.
 
- \textbf{Inputs :} The inputs are identically created as in the simple simulation. The $n_1$ sessions are partitioned into $K$ groups, session $i$ belongs to group $Q[i]$ with $Q[i]\in \{1,\dots,K\}$, $\gamma_{k,j}$ describes the combined effect of group $k$ on the covariate $j$ and %$$X_{i,j}=\gamma_{Q[i],j}Z_{i,j}.$$
+ \textbf{Inputs :} The inputs are identically created as in the simple simulation. The $n_1$ sessions are partitioned into $K$ groups, session $i$ belongs to group $Q[i]$ with $Q[i]\in \{1,\dots,K\}$, $\gamma_{k,j}$ describes the combined effect of group $k$ on the covariate $j$ and 
  $$
  X_{i,j}= \left\{
     \begin{array}{ll}
