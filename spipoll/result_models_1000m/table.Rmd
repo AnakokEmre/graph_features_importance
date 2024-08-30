@@ -55,7 +55,38 @@ cat(kable(table4,digits=2,row.names = FALSE,format="latex")%>%
 ```
 
 ```{r}
+res_grad_LM0 = read.table("res_grad_LM.csv",header=T,sep=",",row.names = 1)
+res_grad_LM = read.table("fair_grad_LM.csv",header=T,sep=",",row.names = 1)
 
+couple0 = paste(res_grad_LM0$features,res_grad_LM0$plant)
+couple1 = paste(res_grad_LM$features,res_grad_LM$plant)
+match0_1 = match(couple0,couple1)
+
+fair_rank = res_grad_LM$median_rank[match0_1]
+print(cor(res_grad_LM0$median_rank,fair_rank,method="spearman"))
+print(cor(res_grad_LM0$median_rank[0:50],fair_rank[0:50],method="spearman"))
+```
+
+```{r}
+truc = c()
+for (k in 1:length(fair_rank)){
+  truc=c(truc,cor(res_grad_LM0$median_rank[1:k],fair_rank[1:k],method="spearman"))
+}
+```
+
+```{r}
+pch0= rep(c(T,F),c(100,length(res_grad_LM0$median_rank)-100))
+pch1=(fair_rank<=(sort(fair_rank)[100]))
+
+color0 = rep("black",length(pch0))
+color0[pch0&pch1] = "brown3"
+color0[pch0&!pch1] = "cornflowerblue"
+color0[!pch0&pch1] = "chartreuse4"
+
+par(pty="s")
+plot(res_grad_LM0$median_rank,
+     fair_rank,cex=0.5,pch=16,
+     col=color0)
 ```
 
 

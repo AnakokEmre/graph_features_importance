@@ -150,20 +150,26 @@ def aggregation_score_LM(SCORE,x,k=None):
         for j in np.arange(SCORE.shape[1]):
             xi = x[:,j]
             X2 = sm.add_constant(xi)
-            y = SCORE[:,j]
-            est = sm.OLS(y, X2)
-            est2 = est.fit()
-            aggregated_score.iloc[0,j] = est2.params[-1]
+            if X2.shape[1]==1:
+                aggregated_score.iloc[0,j] = 0
+            else: 
+                y = SCORE[:,j]
+                est = sm.OLS(y, X2)
+                est2 = est.fit()
+                aggregated_score.iloc[0,j] = est2.params[-1]
     else:
         aggregated_score = pandas.DataFrame(index=np.arange(max(k)+1), columns = np.arange(SCORE.shape[1]))
         for i in aggregated_score.index:
             for j in np.arange(SCORE.shape[1]):
                 xi = x[k==i,j]
                 X2 = sm.add_constant(xi)
-                y = SCORE[k==i,j]
-                est = sm.OLS(y, X2)
-                est2 = est.fit()
-                aggregated_score.iloc[i,j] = est2.params[-1]
+                if X2.shape[1]==1:
+                    aggregated_score.iloc[i,j] = 0
+                else:
+                    y = SCORE[k==i,j]
+                    est = sm.OLS(y, X2)
+                    est2 = est.fit()
+                    aggregated_score.iloc[i,j] = est2.params[-1]
     return aggregated_score
     
     

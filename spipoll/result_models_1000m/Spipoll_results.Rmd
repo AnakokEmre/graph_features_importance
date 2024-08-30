@@ -25,7 +25,7 @@ We fit BVGAE on the data set 30 times before applying to each trained GNN a meth
 #### Grad LM
 
 ```{r}
-res_grad_LM = read.table("res_grad_LM.csv",header=T,sep=",",row.names = 1)
+res_grad_LM = read.table("res_grad_LM2.csv",header=T,sep=",",row.names = 1)
 res_grad_LM$median_rank = res_grad_LM$median_rank+1
 res_grad_LM$median_score = as.character(signif(res_grad_LM$median_score ,3))
 res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"]=paste0("+",res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"])
@@ -192,7 +192,7 @@ kable(table1,digits=2,row.names = FALSE)%>%
 #### Grad LM
 
 ```{r}
-res_grad_LM = read.table("fair_grad_LM.csv",header=T,sep=",",row.names = 1)
+res_grad_LM = read.table("fair_grad_LM2.csv",header=T,sep=",",row.names = 1)
 res_grad_LM$median_rank = res_grad_LM$median_rank+1
 res_grad_LM$median_score = as.character(signif(res_grad_LM$median_score ,3))
 res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"]=paste0("+",res_grad_LM$median_score[substr(res_grad_LM$median_score,1,1)!="-"])
