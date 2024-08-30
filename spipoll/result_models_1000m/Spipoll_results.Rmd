@@ -22,9 +22,9 @@ We fit BVGAE on the data set 30 times before applying to each trained GNN a meth
 
 ### Feature importance method {.tabset}
 
-#### Grad LM
+<!-- #### Grad LM -->
 
-```{r}
+```{r,eval=FALSE,echo=FALSE}
 res_grad_LM = read.table("res_grad_LM2.csv",header=T,sep=",",row.names = 1)
 res_grad_LM$median_rank = res_grad_LM$median_rank+1
 res_grad_LM$median_score = as.character(signif(res_grad_LM$median_score ,3))
@@ -34,41 +34,41 @@ colnames(res_grad_LM) = c("Median rank","Median score","Plant","Features","Ecolo
 
 ```
 
-##### Rankings{.tabset}
-###### All
-```{r}
+<!-- ##### Rankings{.tabset} -->
+<!-- ###### All -->
+```{r,eval=FALSE,echo=FALSE}
 table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
 
 kable(table1,digits=2,row.names = FALSE)%>%
   kable_paper("striped", full_width = F) %>%
   column_spec(3, width = "10em")
 ```
-###### Ecological
-```{r}
+<!-- ###### Ecological -->
+```{r,eval=FALSE,echo=FALSE}
 table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
 table1 = table1[!is.na(res_grad_LM$`Ecological Rank`),]
 kable(table1,digits=2,row.names = FALSE)%>%
   kable_paper("striped", full_width = F) %>%
   column_spec(3, width = "10em")
 ```
-###### Land use
-```{r}
+<!-- ###### Land use -->
+```{r,eval=FALSE,echo=FALSE}
 table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
 table1 = table1[!is.na(res_grad_LM$`Land use Rank`),]
 kable(table1,digits=2,row.names = FALSE)%>%
   kable_paper("striped", full_width = F) %>%
   column_spec(3, width = "10em")
 ```
-###### Temperature
-```{r}
+<!-- ###### Temperature -->
+```{r,eval=FALSE,echo=FALSE}
 table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
 table1 = table1[res_grad_LM$Features=="Temperature",]
 kable(table1,digits=2,row.names = FALSE)%>%
   kable_paper("striped", full_width = F) %>%
   column_spec(3, width = "10em")
 ```
-###### Year
-```{r}
+<!-- ###### Year -->
+```{r,eval=FALSE,echo=FALSE}
 table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
 table1 = table1[res_grad_LM$Features=="Y",]
 kable(table1,digits=2,row.names = FALSE)%>%
@@ -189,9 +189,9 @@ kable(table1,digits=2,row.names = FALSE)%>%
 
 ### Feature importance method {.tabset}
 
-#### Grad LM
+<!-- #### Grad LM -->
 
-```{r}
+```{r,eval=FALSE,echo=FALSE}
 res_grad_LM = read.table("fair_grad_LM2.csv",header=T,sep=",",row.names = 1)
 res_grad_LM$median_rank = res_grad_LM$median_rank+1
 res_grad_LM$median_score = as.character(signif(res_grad_LM$median_score ,3))
@@ -201,41 +201,41 @@ colnames(res_grad_LM) = c("Median rank","Median score","Plant","Features","Ecolo
 
 ```
 
-##### Rankings{.tabset}
-###### All
-```{r}
+<!-- ##### Rankings{.tabset} -->
+<!-- ###### All -->
+```{r,eval=FALSE,echo=FALSE}
 table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
 
 kable(table1,digits=2,row.names = FALSE)%>%
   kable_paper("striped", full_width = F) %>%
   column_spec(3, width = "10em")
 ```
-###### Ecological
-```{r}
+<!-- ###### Ecological -->
+```{r,eval=FALSE,echo=FALSE}
 table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
 table1 = table1[!is.na(res_grad_LM$`Ecological Rank`),]
 kable(table1,digits=2,row.names = FALSE)%>%
   kable_paper("striped", full_width = F) %>%
   column_spec(3, width = "10em")
 ```
-###### Land use
-```{r}
+<!-- ###### Land use -->
+```{r,eval=FALSE,echo=FALSE}
 table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
 table1 = table1[!is.na(res_grad_LM$`Land use Rank`),]
 kable(table1,digits=2,row.names = FALSE)%>%
   kable_paper("striped", full_width = F) %>%
   column_spec(3, width = "10em")
 ```
-###### Temperature
-```{r}
+<!-- ###### Temperature -->
+```{r,eval=FALSE,echo=FALSE}
 table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
 table1 = table1[res_grad_LM$Features=="Temperature",]
 kable(table1,digits=2,row.names = FALSE)%>%
   kable_paper("striped", full_width = F) %>%
   column_spec(3, width = "10em")
 ```
-###### Year
-```{r}
+<!-- ###### Year -->
+```{r,eval=FALSE,echo=FALSE}
 table1=res_grad_LM[c("Median rank","Median score","Plant","Features","Grad sign")]
 table1 = table1[res_grad_LM$Features=="Y",]
 kable(table1,digits=2,row.names = FALSE)%>%
