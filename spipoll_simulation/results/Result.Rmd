@@ -33,13 +33,13 @@ This simulation study tries to replicate numerically the sampling process taking
     \end{array}
 \right.
 $$
- Finally, we define $$X_1 = \left[H|X|X^0 \right]$$ where the intercept $H$ is either $\mathbf{1}_{n_1}$ or $\left[\mathbf{1}_{n_1}| P \right]$. Even if it will be the latest assumption, the number of groups $K$ is not necessarily tied to the number of plants $u$. With $X_2 = \mathbf{1}_{n_2}$, BGVAE adaptation to the Spipoll data set is trained with adjacency matrix $B$, plant matrix $P$
+ Finally, we define $$X_1 = \left[H|X|X^0 \right]$$ where the additional variables $H$ are either $\mathbf{1}_{n_1}$ or $\left[\mathbf{1}_{n_1}| P \right]$. Even if it will be the latest assumption, the number of groups $K$ is not necessarily tied to the number of plants $u$. With $X_2 = \mathbf{1}_{n_2}$, BGVAE adaptation to the Spipoll data set is trained with adjacency matrix $B$, plant matrix $P$
  and covariates $X_1,X_2$. The learning can also be done with the fair-BGVAE. In this case, some input columns of $X_1$ are selected and the learning is penalized by the HSIC between the estimated latent space and these columns. Once the model trained, previously described attribution methods are fit on $f_{\widehat{B'}}(X_1)$ to study the impact of the features of $X_1$ on connectivity. 
 
 
 ## Settings
 
-Parameter settings are presented in the following table. We remind that the true latent space is of size $D = D_+ + D_-$ with $D_+ = D_-$, and $D_0$ is the number of the noise covariates. $K$ is the number of groups. $\Gamma$ represents the set of value possibily taken by $\gamma$. The HSIC columns determine how much columns of $X_1$ are penalized by the HSIC during the learning of the Fair BVGAE, empty values correspond to classical BVGAE learning. $H$ corresponds to the intercept.
+Parameter settings are presented in the following table. We remind that the true latent space is of size $D = D_+ + D_-$ with $D_+ = D_-$, and $D_0$ is the number of the noise covariates. $K$ is the number of groups. $\Gamma$ represents the set of value possibily taken by $\gamma$. The HSIC columns determine how much columns of $X_1$ are penalized by the HSIC during the learning of the Fair BVGAE, empty values correspond to classical BVGAE learning. $H$ corresponds to the additional variables.
 
 ```{r,echo=FALSE}
 table_settings1 = data.frame(row.names = 0:15)
@@ -77,7 +77,9 @@ Easiest simulation
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res0/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
 ```
+
 
 ```{r,echo=FALSE}
 print(paste0("AUC session-pollinator without covariates:" , round(mean(X$AUC0),3) ))
@@ -92,14 +94,14 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
 
 * The dashed line is positioned at zero. 
-* The black dot represents the estimated score for the intercept. 
+* The black dot represents the estimated score for the additional variables $H$. 
 * The green dots represent the estimated score for features where positive values are expected.
 * The red dots represent the estimated score for features where negative values are expected.
 * The blue dots are scores attributed to noise. 
@@ -108,8 +110,8 @@ kable(restable,digits = 2)
 ![](results_for_rmd/res0/GRAD.png)
 ![](results_for_rmd/res0/GRAD_features.png)
 ![](results_for_rmd/res0/IG.png)
-![](results_for_rmd/res0/GRAD_LM.png)
-![](results_for_rmd/res0/IG_LM.png)
+<!-- ![](results_for_rmd/res0/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res0/IG_LM.png) -->
 
 
 ### Simulation 1 
@@ -128,6 +130,8 @@ The algorithm is trained with
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res1/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -143,14 +147,14 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
 
 * The dashed line is positioned at zero. 
-* The black dot represents the estimated score for the intercept. 
+* The black dot represents the estimated score for the additional variables $H$. 
 * The green dots represent the estimated score for features where positive values are expected.
 * The red dots represent the estimated score for features where negative values are expected.
 * The blue dots are scores attributed to noise. 
@@ -160,8 +164,8 @@ kable(restable,digits = 2)
 ![](results_for_rmd/res1/GRAD.png)
 ![](results_for_rmd/res1/GRAD_features.png)
 ![](results_for_rmd/res1/IG.png)
-![](results_for_rmd/res1/GRAD_LM.png)
-![](results_for_rmd/res1/IG_LM.png)
+<!-- ![](results_for_rmd/res0/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res1/IG_LM.png) -->
 
 ### Simulation 2
 
@@ -174,6 +178,8 @@ kable(restable,digits = 2)
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res2/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -189,14 +195,14 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
 
 * The dashed line is positioned at zero. 
-* The black dot represents the estimated score for the intercept. 
+* The black dot represents the estimated score for the additional variables $H$. 
 * The green dots represent the estimated score for features where positive values are expected.
 * The red dots represent the estimated score for features where negative values are expected.
 * The blue dots are scores attributed to noise. 
@@ -205,8 +211,8 @@ kable(restable,digits = 2)
 ![](results_for_rmd/res2/GRAD.png)
 ![](results_for_rmd/res2/GRAD_features.png)
 ![](results_for_rmd/res2/IG.png)
-![](results_for_rmd/res2/GRAD_LM.png)
-![](results_for_rmd/res2/IG_LM.png)
+<!-- ![](results_for_rmd/res2/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res2/IG_LM.png) -->
 
 
 ### Simulation 3
@@ -226,6 +232,8 @@ The algorithm is trained with
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res3/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -240,14 +248,14 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
 
 * The dashed line is positioned at zero. 
-* The black dot represents the estimated score for the intercept. 
+* The black dot represents the estimated score for the additional variables $H$. 
 * The green dots represent the estimated score for features where positive values are expected.
 * The red dots represent the estimated score for features where negative values are expected.
 * The blue dots are scores attributed to noise. 
@@ -257,8 +265,8 @@ kable(restable,digits = 2)
 ![](results_for_rmd/res3/GRAD.png)
 ![](results_for_rmd/res3/GRAD_features.png)
 ![](results_for_rmd/res3/IG.png)
-![](results_for_rmd/res3/GRAD_LM.png)
-![](results_for_rmd/res3/IG_LM.png)
+<!-- ![](results_for_rmd/res3/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res3/IG_LM.png) -->
 
 
 ### Simulation 4
@@ -278,6 +286,8 @@ kable(restable,digits = 2)
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res4/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -292,7 +302,7 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
@@ -300,7 +310,7 @@ kable(restable,digits = 2)
 
 For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
-* The black frames represent the estimated score for the intercept,
+* The black frames represent the estimated score for the additional variables $H$,
 * The green  frames represent the score for features where positive values are expected
 * The red frames represent the score for features negative values are expected
 * The blue frames are scores attributed to noise. 
@@ -309,8 +319,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res4/GRAD.png)
 ![](results_for_rmd/res4/GRAD_features.png)
 ![](results_for_rmd/res4/IG.png)
-![](results_for_rmd/res4/GRAD_LM.png)
-![](results_for_rmd/res4/IG_LM.png)
+<!-- ![](results_for_rmd/res4/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res4/IG_LM.png) -->
 
 
 
@@ -329,6 +339,8 @@ For all plot, each row represents a group, while each column represents a featur
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res5/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -343,7 +355,7 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
@@ -351,7 +363,7 @@ kable(restable,digits = 2)
 
 For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
-* The black frames represent the estimated score for the intercept,
+* The black frames represent the estimated score for the additional variables $H$,
 * The green  frames represent the score for features where positive values are expected
 * The red frames represent the score for features negative values are expected
 * The blue frames are scores attributed to noise. 
@@ -361,8 +373,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res5/GRAD.png)
 ![](results_for_rmd/res5/GRAD_features.png)
 ![](results_for_rmd/res5/IG.png)
-![](results_for_rmd/res5/GRAD_LM.png)
-![](results_for_rmd/res5/IG_LM.png)
+<!-- ![](results_for_rmd/res5/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res5/IG_LM.png) -->
 
 
 
@@ -371,8 +383,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res5/GRAD_zoomed.png)
 ![](results_for_rmd/res5/GRAD_features_zoomed.png)
 ![](results_for_rmd/res5/IG_zoomed.png)
-![](results_for_rmd/res5/GRAD_LM_zoomed.png)
-![](results_for_rmd/res5/IG_LM_zoomed.png)
+<!-- ![](results_for_rmd/res5/GRAD_LM_zoomed.png) -->
+<!-- ![](results_for_rmd/res5/IG_LM_zoomed.png) -->
 
 
 ### Simulation 6
@@ -386,6 +398,8 @@ For all plot, each row represents a group, while each column represents a featur
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res6/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -400,7 +414,7 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
@@ -408,7 +422,7 @@ kable(restable,digits = 2)
 
 For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
-* The black frames represent the estimated score for the intercept,
+* The black frames represent the estimated score for the additional variables $H$,
 * The green  frames represent the score for features where positive values are expected
 * The red frames represent the score for features negative values are expected
 * The blue frames are scores attributed to noise. 
@@ -418,8 +432,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res6/GRAD.png)
 ![](results_for_rmd/res6/GRAD_features.png)
 ![](results_for_rmd/res6/IG.png)
-![](results_for_rmd/res6/GRAD_LM.png)
-![](results_for_rmd/res6/IG_LM.png)
+<!-- ![](results_for_rmd/res6/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res6/IG_LM.png) -->
 
 
 
@@ -428,8 +442,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res6/GRAD_zoomed.png)
 ![](results_for_rmd/res6/GRAD_features_zoomed.png)
 ![](results_for_rmd/res6/IG_zoomed.png)
-![](results_for_rmd/res6/GRAD_LM_zoomed.png)
-![](results_for_rmd/res6/IG_LM_zoomed.png)
+<!-- ![](results_for_rmd/res6/GRAD_LM_zoomed.png) -->
+<!-- ![](results_for_rmd/res6/IG_LM_zoomed.png) -->
 
 
 
@@ -445,6 +459,8 @@ For all plot, each row represents a group, while each column represents a featur
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res7/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -459,7 +475,7 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
@@ -467,7 +483,7 @@ kable(restable,digits = 2)
 
 For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
-* The black frames represent the estimated score for the intercept,
+* The black frames represent the estimated score for the additional variables $H$,
 * The green  frames represent the score for features where positive values are expected
 * The red frames represent the score for features negative values are expected
 * The blue frames are scores attributed to noise.
@@ -477,8 +493,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res7/GRAD.png)
 ![](results_for_rmd/res7/GRAD_features.png)
 ![](results_for_rmd/res7/IG.png)
-![](results_for_rmd/res7/GRAD_LM.png)
-![](results_for_rmd/res7/IG_LM.png)
+<!-- ![](results_for_rmd/res7/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res7/IG_LM.png) -->
 
 
 
@@ -487,8 +503,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res7/GRAD_zoomed.png)
 ![](results_for_rmd/res7/GRAD_features_zoomed.png)
 ![](results_for_rmd/res7/IG_zoomed.png)
-![](results_for_rmd/res7/GRAD_LM_zoomed.png)
-![](results_for_rmd/res7/IG_LM_zoomed.png)
+<!-- ![](results_for_rmd/res7/GRAD_LM_zoomed.png) -->
+<!-- ![](results_for_rmd/res7/IG_LM_zoomed.png) -->
 
 
 
@@ -504,6 +520,8 @@ For all plot, each row represents a group, while each column represents a featur
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res8/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -518,7 +536,7 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
@@ -526,7 +544,7 @@ kable(restable,digits = 2)
 
 For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
-* The black frames represent the estimated score for the intercept,
+* The black frames represent the estimated score for the additional variables $H$,
 * The green  frames represent the score for features where positive values are expected
 * The red frames represent the score for features negative values are expected
 * The blue frames are scores attributed to noise.
@@ -536,8 +554,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res8/GRAD.png)
 ![](results_for_rmd/res8/GRAD_features.png)
 ![](results_for_rmd/res8/IG.png)
-![](results_for_rmd/res8/GRAD_LM.png)
-![](results_for_rmd/res8/IG_LM.png)
+<!-- ![](results_for_rmd/res8/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res8/IG_LM.png) -->
 
 
 
@@ -546,8 +564,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res8/GRAD_zoomed.png)
 ![](results_for_rmd/res8/GRAD_features_zoomed.png)
 ![](results_for_rmd/res8/IG_zoomed.png)
-![](results_for_rmd/res8/GRAD_LM_zoomed.png)
-![](results_for_rmd/res8/IG_LM_zoomed.png)
+<!-- ![](results_for_rmd/res8/GRAD_LM_zoomed.png) -->
+<!-- ![](results_for_rmd/res8/IG_LM_zoomed.png) -->
 
 
 
@@ -563,6 +581,8 @@ For all plot, each row represents a group, while each column represents a featur
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res9/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -577,7 +597,7 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
@@ -585,7 +605,7 @@ kable(restable,digits = 2)
 
 For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
-* The black frames represent the estimated score for the intercept,
+* The black frames represent the estimated score for the additional variables $H$,
 * The green  frames represent the score for features where positive values are expected
 * The red frames represent the score for features negative values are expected
 * The blue frames are scores attributed to noise.
@@ -594,8 +614,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res9/GRAD.png)
 ![](results_for_rmd/res9/GRAD_features.png)
 ![](results_for_rmd/res9/IG.png)
-![](results_for_rmd/res9/GRAD_LM.png)
-![](results_for_rmd/res9/IG_LM.png)
+<!-- ![](results_for_rmd/res9/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res9/IG_LM.png) -->
 
 
 
@@ -604,8 +624,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res9/GRAD_zoomed.png)
 ![](results_for_rmd/res9/GRAD_features_zoomed.png)
 ![](results_for_rmd/res9/IG_zoomed.png)
-![](results_for_rmd/res9/GRAD_LM_zoomed.png)
-![](results_for_rmd/res9/IG_LM_zoomed.png)
+<!-- ![](results_for_rmd/res9/GRAD_LM_zoomed.png) -->
+<!-- ![](results_for_rmd/res9/IG_LM_zoomed.png) -->
 
 
 ### Simulation 10
@@ -622,6 +642,8 @@ The goal is to see if the scores assigned to the variables penalized by the HSIC
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res10/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -636,14 +658,14 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
 
 
 * The dashed line is positioned at zero. 
-* The black dot represents the estimated score for the intercept. 
+* The black dot represents the estimated score for the additional variables $H$. 
 * The green dots represent the estimated score for features where positive values are expected.
 * The red dots represent the estimated score for features where negative values are expected.
 * The blue dots are scores attributed to noise. 
@@ -654,8 +676,8 @@ kable(restable,digits = 2)
 ![](results_for_rmd/res10/GRAD.png)
 ![](results_for_rmd/res10/GRAD_features.png)
 ![](results_for_rmd/res10/IG.png)
-![](results_for_rmd/res10/GRAD_LM.png)
-![](results_for_rmd/res10/IG_LM.png)
+<!-- ![](results_for_rmd/res10/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res10/IG_LM.png) -->
 
 
 
@@ -672,6 +694,8 @@ The goal is to see if the scores assigned to the variables penalized by the HSIC
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res11/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -686,7 +710,7 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
@@ -694,7 +718,7 @@ kable(restable,digits = 2)
 
 For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
-* The black frames represent the estimated score for the intercept,
+* The black frames represent the estimated score for the additional variables $H$,
 * The green  frames represent the score for features where positive values are expected
 * The red frames represent the score for features negative values are expected
 * The blue frames are scores attributed to noise or to variable penalized by the HSIC. 
@@ -703,8 +727,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res11/GRAD.png)
 ![](results_for_rmd/res11/GRAD_features.png)
 ![](results_for_rmd/res11/IG.png)
-![](results_for_rmd/res11/GRAD_LM.png)
-![](results_for_rmd/res11/IG_LM.png)
+<!-- ![](results_for_rmd/res11/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res11/IG_LM.png) -->
 
 
 
@@ -713,7 +737,7 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res11/GRAD_zoomed.png)
 ![](results_for_rmd/res11/GRAD_features_zoomed.png)
 ![](results_for_rmd/res11/IG_zoomed.png)
-![](results_for_rmd/res11/GRAD_LM_zoomed.png)
+<!-- ![](results_for_rmd/res11/GRAD_LM_zoomed.png) -->
 
 
 
@@ -732,6 +756,8 @@ Similaire à simulation 9 mais avec HSIC
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res12/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -746,7 +772,7 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
@@ -754,7 +780,7 @@ kable(restable,digits = 2)
 
 For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
-* The black frames represent the estimated score for the intercept,
+* The black frames represent the estimated score for the additional variables $H$,
 * The green  frames represent the score for features where positive values are expected
 * The red frames represent the score for features negative values are expected
 * The blue frames are scores attributed to noise or to variable penalized by the HSIC. 
@@ -764,8 +790,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res12/GRAD.png)
 ![](results_for_rmd/res12/GRAD_features.png)
 ![](results_for_rmd/res12/IG.png)
-![](results_for_rmd/res12/GRAD_LM.png)
-![](results_for_rmd/res12/IG_LM.png)
+<!-- ![](results_for_rmd/res12/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res12/IG_LM.png) -->
 
 
 
@@ -774,7 +800,7 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res12/GRAD_zoomed.png)
 ![](results_for_rmd/res12/GRAD_features_zoomed.png)
 ![](results_for_rmd/res12/IG_zoomed.png)
-![](results_for_rmd/res12/GRAD_LM_zoomed.png)
+<!-- ![](results_for_rmd/res12/GRAD_LM_zoomed.png) -->
 
 ### Simulation 13
 
@@ -789,6 +815,8 @@ For all plot, each row represents a group, while each column represents a featur
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res13/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -803,7 +831,7 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
@@ -811,7 +839,7 @@ kable(restable,digits = 2)
 
 For all plot, each row represents a group, while each column represents a feature. The top six graphics display the estimated scores for all features. Features to the right of the red lines are noise. The bottom six graphics are zoomed-in sections of the left portion of the top six graphics. For each cell, the border frame represents the expected value, while the interior represents the estimated value.
 
-* The black frames represent the estimated score for the intercept,
+* The black frames represent the estimated score for the additional variables $H$,
 * The green  frames represent the score for features where positive values are expected
 * The red frames represent the score for features negative values are expected
 * The blue frames are scores attributed to noise or to variable penalized by the HSIC. 
@@ -821,8 +849,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res13/GRAD.png)
 ![](results_for_rmd/res13/GRAD_features.png)
 ![](results_for_rmd/res13/IG.png)
-![](results_for_rmd/res13/GRAD_LM.png)
-![](results_for_rmd/res13/IG_LM.png)
+<!-- ![](results_for_rmd/res13/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res13/IG_LM.png) -->
 
 
 
@@ -831,7 +859,7 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res13/GRAD_zoomed.png)
 ![](results_for_rmd/res13/GRAD_features_zoomed.png)
 ![](results_for_rmd/res13/IG_zoomed.png)
-![](results_for_rmd/res13/GRAD_LM_zoomed.png)
+<!-- ![](results_for_rmd/res13/GRAD_LM_zoomed.png) -->
 
 
 
@@ -848,6 +876,8 @@ For all plot, each row represents a group, while each column represents a featur
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res14/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -862,7 +892,7 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
@@ -874,8 +904,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res14/GRAD.png)
 ![](results_for_rmd/res14/GRAD_features.png)
 ![](results_for_rmd/res14/IG.png)
-![](results_for_rmd/res14/GRAD_LM.png)
-![](results_for_rmd/res14/IG_LM.png)
+<!-- ![](results_for_rmd/res14/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res14/IG_LM.png) -->
 
 
 
@@ -883,7 +913,7 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res14/GRAD_zoomed.png)
 ![](results_for_rmd/res14/GRAD_features_zoomed.png)
 ![](results_for_rmd/res14/IG_zoomed.png)
-![](results_for_rmd/res14/GRAD_LM_zoomed.png)
+<!-- ![](results_for_rmd/res14/GRAD_LM_zoomed.png) -->
 
 
 
@@ -900,6 +930,8 @@ For all plot, each row represents a group, while each column represents a featur
 
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 X=read.table("results_for_rmd/res15/res.csv",sep=",",header=T,row.names = 1)
+X=X[1:(ncol(X)-6)]
+
 ```
 
 ```{r,echo=FALSE}
@@ -914,7 +946,7 @@ print(paste0("AUCplant-pollinator with covariates: " , round(mean(X$AUC3_1),3) )
 ```{r, fig.dim=c(5, 3),echo=FALSE}
 restable = matrix(colMeans(X[5:ncol(X)]),nrow=3)
 rownames(restable)= c("+","-","AUC")
-colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG","GRAD_LM","IG1_LM")
+colnames(restable) = c("GraphSVX","GRAD","GRADxInput","IG")#,"GRAD_LM","IG1_LM")
 
 kable(restable,digits = 2)
 ```
@@ -927,8 +959,8 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res15/GRAD.png)
 ![](results_for_rmd/res15/GRAD_features.png)
 ![](results_for_rmd/res15/IG.png)
-![](results_for_rmd/res15/GRAD_LM.png)
-![](results_for_rmd/res15/IG_LM.png)
+<!-- ![](results_for_rmd/res15/GRAD_LM.png) -->
+<!-- ![](results_for_rmd/res15/IG_LM.png) -->
 
 
 
@@ -936,7 +968,7 @@ For all plot, each row represents a group, while each column represents a featur
 ![](results_for_rmd/res15/GRAD_zoomed.png)
 ![](results_for_rmd/res15/GRAD_features_zoomed.png)
 ![](results_for_rmd/res15/IG_zoomed.png)
-![](results_for_rmd/res15/GRAD_LM_zoomed.png)
+<!-- ![](results_for_rmd/res15/GRAD_LM_zoomed.png) -->
 
 
 
