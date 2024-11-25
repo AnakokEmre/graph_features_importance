@@ -128,6 +128,28 @@ def IG_score(model,features01,features02,adj_norm,m=201):
     
     return(IG1.detach().numpy(),IG2.detach().numpy()) 
 
+def simple_score(adj0,features01,k=None):
+    mu = np.median(features01,axis=0)
+    comparaison= features01>mu
+    adj1 = pandas.DataFrame(adj0)
+    if k is None:
+        aggregated_score = pandas.DataFrame(index=np.arange(1),
+                                            columns = np.arange(features01.shape[1]))
+        adj1["k"]=0
+    else:
+        aggregated_score = pandas.DataFrame(index=np.arange(max(k)+1),
+                                         columns = np.arange(features01.shape[1]))
+        adj1["k"]=k
+    
+    for j,m in enumerate(mu):
+        adj1["comparaison"] = comparaison[:,j]
+        score=adj1.groupby(["k","comparaison"]).mean().mean(1)
+        for i in aggregated_score.index:
+            aggregated_score.iloc[i,j]= score[i][True]-score[i][False]
+        
+    return aggregated_score
+    
+    
 
 
 def aggregation_score_mean(SCORE,k=None):
@@ -161,7 +183,6 @@ def aggregation_score_LM(SCORE,x,k=None):
                 est2 = est.fit()
                 aggregated_score.iloc[i,j] = est2.params[-1]
     return aggregated_score
-    
     
 
 
@@ -291,7 +312,7 @@ def plot_score(SCORE,POS,NEG,ZERO,title="score",intercept=1,file = None, fontsiz
     #plt.scatter(X,SCORE,marker=markers ,c= intercept*["black"]+POS*["green"]+NEG*["red"]+ZERO*["blue"])
     
     for i in range(len(X)):
-        plt.scatter(X[i], SCORE[i], color=colors[i], marker=markers[i])
+        plt.scatter(X[i], SCORE[i], color=colors[i], marker=markers[i],s=120)
     
     
     plt.axhline(y=0, linestyle='--')
@@ -344,7 +365,7 @@ def plot_aggregated(SCORE,EXPECTED=None,title="score",annot=True,sign=False,colo
                 ax.add_patch(rect)
                 if sign:
                     annotation = '+' if data1[i, j] > 0 else '-'
-                    ax.text(j + 0.5, i + 0.5, annotation, ha='center', va='center', color='white')
+                    ax.text(j + 0.5, i + 0.5, annotation, ha='center', va='center', color='white',fontsize=20)
                     
     
     # Show the plot

@@ -672,7 +672,7 @@ x1_2[:,2] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
 features01 = np.ones(shape=(adj0.shape[0],1))
 features02 = np.ones(shape=(adj0.shape[1],1))
 
-model,features1,features2,adj_norm,test_roc =  train_model(adj0,features01,features02,GRDPG=1,latent_dim=2,niter= 500)
+#model,features1,features2,adj_norm,test_roc =  train_model(adj0,features01,features02,GRDPG=1,latent_dim=2,niter= 500)
 
 features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),x1_1,x1_2,x1_3])
 features02 = np.ones(shape=(adj0.shape[1],1))
