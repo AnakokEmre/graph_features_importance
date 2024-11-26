@@ -1421,13 +1421,13 @@ for k in range(K):
     SCORE_shapley_aggregated = aggregation_shapley_score(model,features01,features02,adj_norm,SP,species_index,n_repeat = 2000)
    
     EXPECTED = np.zeros((4,features01.shape[1]))
-    EXPECTED[:,2]= [1,1,1,1]
-    EXPECTED[:,3]= [1,1,-1,-1]
-    EXPECTED[:,4]= [1,1,0,0]
+    EXPECTED[:,2+nb_groupe]= [1,1,1,1]
+    EXPECTED[:,3+nb_groupe]= [1,1,-1,-1]
+    EXPECTED[:,4+nb_groupe]= [1,1,0,0]
     
-    EXPECTED[:,6]= [-1,-1,-1,-1]
-    EXPECTED[:,7]= [-1,-1,1,1]
-    EXPECTED[:,8]= [-1,-1,0,0]
+    EXPECTED[:,6+nb_groupe]= [-1,-1,-1,-1]
+    EXPECTED[:,7+nb_groupe]= [-1,-1,1,1]
+    EXPECTED[:,8+nb_groupe]= [-1,-1,0,0]
     
     
     RES0.loc[k,["AUC0","AUC1"]] = test_roc0,test_roc1
