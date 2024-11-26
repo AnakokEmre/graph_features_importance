@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+Created on Tue Nov 26 15:35:36 2024
+
+@author: Emre
+"""
+# -*- coding: utf-8 -*-
+"""
 Created on Tue Jul 23 17:23:51 2024
 
 @author: Emre
@@ -115,8 +121,8 @@ SCORE_IG1,SCORE_IG2 = IG_score(model,features01,features02,adj_norm,SP,m=201)
 
 
 #%%
-#directory = "results/brouillon/"
-directory = "results/results_for_rmd/res0/"
+directory = "results/brouillon/"
+#directory = "results/results_for_rmd/res0/"
 plot_score(SCORE_shapley,POS,NEG,ZERO,title="GraphSVX",file = directory+"score_shapley.png")
 plot_score(aggregation_score_mean(SCORE_grad),POS,NEG,ZERO,title="Grad",file = directory+"GRAD.png")
 plot_score(aggregation_score_mean(SCORE_grad*features01),POS,NEG,ZERO,title="Grad*features",file = directory+"GRAD_features.png")

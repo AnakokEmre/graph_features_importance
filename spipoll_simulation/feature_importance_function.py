@@ -130,7 +130,47 @@ def IG_score(model,features01,features02,adj_norm,SP,m=201):
     
     return(IG1.detach().numpy(),IG2.detach().numpy()) 
 
+def simple_score(adj0,features01,SP,k=None):
+    SP0 = 1*(SP>0)
+    mu = np.median(features01,axis=0)
+    comparaison= features01>mu
 
+    if k is None:
+        aggregated_score = pandas.DataFrame(index=np.arange(1),
+                                            columns = np.arange(features01.shape[1]))
+        for j,m in enumerate(mu):
+            observed_matrix = adj0[comparaison[:,j],:]
+            observed_SP = SP0[:,comparaison[:,j]]
+            observed_bipartite = 1*(observed_SP@observed_matrix>0)
+            score1=observed_bipartite.mean()
+            
+            other_matrix = adj0[~comparaison[:,j],:]
+            other_SP = SP0[:,~comparaison[:,j]]
+            other_bipartite =  1*(other_SP@other_matrix>0)
+            score0 = other_bipartite.mean()
+            aggregated_score.iloc[0,j]=score1-score0
+            
+    
+    else:
+        aggregated_score = pandas.DataFrame(index=np.arange(max(k)+1),
+                                         columns = np.arange(features01.shape[1]))
+        for i in aggregated_score.index:
+            for j,m in enumerate(mu):
+                observed_matrix = adj0[comparaison[:,j],:]
+                observed_SP = SP0[:,comparaison[:,j]]
+                observed_bipartite = 1*(observed_SP@observed_matrix>0)
+                score1=observed_bipartite.mean()
+                
+                other_matrix = adj0[~comparaison[:,j],:]
+                other_SP = SP0[:,~comparaison[:,j]]
+                other_bipartite =  1*(other_SP@other_matrix>0)
+                score0 = other_bipartite.mean()
+                aggregated_score.iloc[0,j]=score1-score0
+        
+    
+        
+    return aggregated_score
+    
 
 def aggregation_score_mean(SCORE,k=None):
     if k is None:

@@ -853,9 +853,9 @@ for k in range(K):
     x1_1[:,2] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
     
     
-    x1_2[:,1] = change_data_signe(x1_1[:,1],[1,1,-1,-1],species_index) #2
+    x1_2[:,1] = change_data_signe(x1_2[:,1],[1,1,-1,-1],species_index) #2
     
-    x1_2[:,2] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
+    x1_2[:,2] = change_data_signe(x1_2[:,2],[1,1,0,0],species_index) #3
     
     
     #features01 = np.eye(adj0.shape[0])
@@ -959,9 +959,9 @@ for k in range(K):
     x1_1[:,2] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
     
     
-    x1_2[:,1] = change_data_signe(x1_1[:,1],[1,1,-1,-1],species_index) #2
+    x1_2[:,1] = change_data_signe(x1_2[:,1],[1,1,-1,-1],species_index) #2
     
-    x1_2[:,2] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
+    x1_2[:,2] = change_data_signe(x1_2[:,2],[1,1,0,0],species_index) #3
     
     
     #features01 = np.eye(adj0.shape[0])
@@ -1278,8 +1278,8 @@ for k in range(K):
     
     x1_1[:,2] = change_data_signe(x1_1[:,1],[1,1,-1,-1],species_index) #2
     x1_1[:,3] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
-    x1_2[:,2] = change_data_signe(x1_1[:,1],[1,1,-1,-1],species_index) #2
-    x1_2[:,3] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
+    x1_2[:,2] = change_data_signe(x1_2[:,1],[1,1,-1,-1],species_index) #2
+    x1_2[:,3] = change_data_signe(x1_2[:,2],[1,1,0,0],species_index) #3
     S = np.hstack([x1_1[:,0].reshape(-1,1),x1_2[:,0].reshape(-1,1)])
     
     
@@ -1395,8 +1395,8 @@ for k in range(K):
     
     x1_1[:,2] = change_data_signe(x1_1[:,1],[1,1,-1,-1],species_index) #2
     x1_1[:,3] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
-    x1_2[:,2] = change_data_signe(x1_1[:,1],[1,1,-1,-1],species_index) #2
-    x1_2[:,3] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
+    x1_2[:,2] = change_data_signe(x1_2[:,1],[1,1,-1,-1],species_index) #2
+    x1_2[:,3] = change_data_signe(x1_2[:,2],[1,1,0,0],species_index) #3
     S = np.hstack([x1_1[:,0].reshape(-1,1),x1_2[:,0].reshape(-1,1)])
     
     
@@ -1515,8 +1515,8 @@ for k in range(K):
     
     x1_1[:,2] = change_data_signe(x1_1[:,1],signe1,species_index) #2
     x1_1[:,3] = change_data_signe(x1_1[:,2],signe2,species_index) #3
-    x1_2[:,2] = change_data_signe(x1_1[:,1],signe3,species_index) #2
-    x1_2[:,3] = change_data_signe(x1_1[:,2],signe4,species_index) #3
+    x1_2[:,2] = change_data_signe(x1_2[:,1],signe3,species_index) #2
+    x1_2[:,3] = change_data_signe(x1_2[:,2],signe4,species_index) #3
     S = np.hstack([x1_1[:,0].reshape(-1,1),x1_2[:,0].reshape(-1,1)])
     
     
@@ -1634,8 +1634,8 @@ for k in range(K):
     
     x1_1[:,2] = change_data_signe(x1_1[:,1],signe1,species_index) #2
     x1_1[:,3] = change_data_signe(x1_1[:,2],signe2,species_index) #3
-    x1_2[:,2] = change_data_signe(x1_1[:,1],signe3,species_index) #2
-    x1_2[:,3] = change_data_signe(x1_1[:,2],signe4,species_index) #3
+    x1_2[:,2] = change_data_signe(x1_2[:,1],signe3,species_index) #2
+    x1_2[:,3] = change_data_signe(x1_2[:,2],signe4,species_index) #3
     S = np.hstack([x1_1[:,0].reshape(-1,1),x1_2[:,0].reshape(-1,1)])
     
     
@@ -1754,8 +1754,8 @@ for k in range(K):
     
     x1_1[:,2] = change_data_signe(x1_1[:,1],signe1,species_index) #2
     x1_1[:,3] = change_data_signe(x1_1[:,2],signe2,species_index) #3
-    x1_2[:,2] = change_data_signe(x1_1[:,1],signe3,species_index) #2
-    x1_2[:,3] = change_data_signe(x1_1[:,2],signe4,species_index) #3
+    x1_2[:,2] = change_data_signe(x1_2[:,1],signe3,species_index) #2
+    x1_2[:,3] = change_data_signe(x1_2[:,2],signe4,species_index) #3
     S = np.hstack([x1_1[:,0].reshape(-1,1),x1_2[:,0].reshape(-1,1)])
     
     
