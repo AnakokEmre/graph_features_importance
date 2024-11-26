@@ -145,8 +145,10 @@ def simple_score(adj0,features01,k=None):
         adj1["comparaison"] = comparaison[:,j]
         score=adj1.groupby(["k","comparaison"]).mean().mean(1)
         for i in aggregated_score.index:
-            aggregated_score.iloc[i,j]= score[i][True]-score[i][False]
-        
+            try:
+                aggregated_score.iloc[i,j]= score[i][True]-score[i][False]
+            except:
+                aggregated_score.iloc[i,j]= 0
     return aggregated_score
     
     

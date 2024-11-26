@@ -7,7 +7,7 @@ Created on Mon Aug 12 13:45:26 2024
 """
 #%%
 from PIL import Image
-directory = "results/results_for_rmd/res10/"
+directory = "results/results_for_rmd/res12/"
 
 image_paths = [directory+"score_shapley.png",
                directory+"GRAD.png",
@@ -36,7 +36,7 @@ for i, img in enumerate(images):
 new_image.save(directory+'merged_image.png')
 
 #%%
-directory = "results/results_for_rmd/res10/"
+directory = "results/results_for_rmd/res12/"
 
 image_paths = [directory+"score_shapley_zoomed.png",
                directory+"GRAD_zoomed.png",
