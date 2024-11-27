@@ -130,12 +130,12 @@ def IG_score(model,features01,features02,adj_norm,SP,m=201):
     
     return(IG1.detach().numpy(),IG2.detach().numpy()) 
 
-def simple_score(adj0,features01,SP,k=None):
+def simple_score(adj0,features01,SP,plant_group=None):
     SP0 = 1*(SP>0)
     mu = np.median(features01,axis=0)
     comparaison= features01>mu
 
-    if k is None:
+    if plant_group is None:
         aggregated_score = pandas.DataFrame(index=np.arange(1),
                                             columns = np.arange(features01.shape[1]))
         for j,m in enumerate(mu):
@@ -152,23 +152,25 @@ def simple_score(adj0,features01,SP,k=None):
             
     
     else:
-        aggregated_score = pandas.DataFrame(index=np.arange(max(k)+1),
+        aggregated_score = pandas.DataFrame(index=np.arange(max(plant_group)+1),
                                          columns = np.arange(features01.shape[1]))
-        for i in aggregated_score.index:
-            for j,m in enumerate(mu):
-                observed_matrix = adj0[comparaison[:,j],:]
-                observed_SP = SP0[:,comparaison[:,j]]
-                observed_bipartite = 1*(observed_SP@observed_matrix>0)
-                score1=observed_bipartite.mean()
-                
-                other_matrix = adj0[~comparaison[:,j],:]
-                other_SP = SP0[:,~comparaison[:,j]]
-                other_bipartite =  1*(other_SP@other_matrix>0)
-                score0 = other_bipartite.mean()
-                aggregated_score.iloc[0,j]=score1-score0
         
+        for j,m in enumerate(mu):
+            observed_matrix = adj0[comparaison[:,j],:]
+            observed_SP = SP0[:,comparaison[:,j]]
+            observed_bipartite = 1*(observed_SP@observed_matrix>0)
+            
+            other_matrix = adj0[~comparaison[:,j],:]
+            other_SP = SP0[:,~comparaison[:,j]]
+            other_bipartite =  1*(other_SP@other_matrix>0)
+            
+            for i in aggregated_score.index:
+                score_observed_i =  observed_bipartite[plant_group==i,:].mean()
+                score_other_i =  other_bipartite[plant_group==i,:].mean()
+                aggregated_score.iloc[i,j] = score_observed_i-score_other_i
+            
     
-        
+
     return aggregated_score
     
 
@@ -227,7 +229,7 @@ def aggregation_shapley_score(model,features01,features02,adj_norm,SP,k,n_repeat
     v_list = tqdm(range(n_repeat))
     list_phi = []
     D = []
-    K = np.zeros(n_repeat)
+    K = np.zeros(n_repeat,dtype=int)
     for u,v in enumerate(v_list):
         z = np.random.randint(2,size=features01.shape[1])
         zk = np.random.randint((max(k)+1))
@@ -251,7 +253,7 @@ def aggregation_shapley_score(model,features01,features02,adj_norm,SP,k,n_repeat
     aggregated_score = pandas.DataFrame(index=np.arange(max(k)+1), columns = np.arange(features01.shape[1]))
     for i in aggregated_score.index:
         reg = LinearRegression()
-        reg.fit(D2[K==i,:(-1)], D2[K==i,(-1)],weight[K==i])
+        reg.fit(D2[K==i,:-1], D2[K==i,-1],weight[K==i])
         aggregated_score.loc[i] = reg.coef_
     return aggregated_score
     

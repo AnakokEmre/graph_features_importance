@@ -1407,18 +1407,18 @@ for k in range(K):
     features01 = np.ones(shape=(adj0.shape[0],1))
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,SP,test_roc0,test_roc3_0 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 1000)
+    model,features1,features2,adj_norm,SP,test_roc0,test_roc3_0 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 500)
     
     features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),species_index_ind ,x1_1,x1_2,x1_3])
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,SP,test_roc1,test_roc3_1 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 1000)
+    model,features1,features2,adj_norm,SP,test_roc1,test_roc3_1 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 500)
     
 
     #SCORE_shapley = graph_shapley_score(model,features01,features02,adj_norm,SP,n_repeat = 1000)
     SCORE_grad = GRAD_score(model,features01,features02,adj_norm,SP,n_repeat=50)
     SCORE_IG1,SCORE_IG2 = IG_score(model,features01,features02,adj_norm,SP,m=201)
-    SCORE_shapley_aggregated = aggregation_shapley_score(model,features01,features02,adj_norm,SP,species_index,n_repeat = 2000)
+    SCORE_shapley_aggregated = aggregation_shapley_score(model,features01,features02,adj_norm,SP,species_index,n_repeat = 1000)
    
     EXPECTED = np.zeros((4,features01.shape[1]))
     EXPECTED[:,2+nb_groupe]= [1,1,1,1]
@@ -1527,18 +1527,18 @@ for k in range(K):
     features01 = np.ones(shape=(adj0.shape[0],1))
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,SP,test_roc0,test_roc3_0 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 1000)
+    model,features1,features2,adj_norm,SP,test_roc0,test_roc3_0 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 500)
     
     features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),species_index_ind ,x1_1,x1_2,x1_3])
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,SP,test_roc1,test_roc3_1 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 1000)
+    model,features1,features2,adj_norm,SP,test_roc1,test_roc3_1 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 500)
         
 
     #SCORE_shapley = graph_shapley_score(model,features01,features02,adj_norm,SP,n_repeat = 1000)
     SCORE_grad = GRAD_score(model,features01,features02,adj_norm,SP,n_repeat=50)
     SCORE_IG1,SCORE_IG2 = IG_score(model,features01,features02,adj_norm,SP,m=201)
-    SCORE_shapley_aggregated = aggregation_shapley_score(model,features01,features02,adj_norm,SP,species_index,n_repeat = 2000)
+    SCORE_shapley_aggregated = aggregation_shapley_score(model,features01,features02,adj_norm,SP,species_index,n_repeat = 1000)
    
     EXPECTED = np.zeros((nb_groupe,features01.shape[1]))
     EXPECTED[:,2+nb_groupe]= 1
@@ -1646,12 +1646,12 @@ for k in range(K):
     features01 = np.ones(shape=(adj0.shape[0],1))
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,SP,test_roc0,test_roc3_0 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 1000)
+    model,features1,features2,adj_norm,SP,test_roc0,test_roc3_0 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 500)
     
     features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),species_index_ind ,x1_1,x1_2,x1_3])
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,SP,test_roc1,test_roc3_1 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 1000)
+    model,features1,features2,adj_norm,SP,test_roc1,test_roc3_1 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 500)
         
 
     #SCORE_shapley = graph_shapley_score(model,features01,features02,adj_norm,SP,n_repeat = 1000)
