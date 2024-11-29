@@ -1039,8 +1039,8 @@ EXPECTED[:,4]= [1,1,0,0]
 EXPECTED[:,6]= [-1,-1,-1,-1]
 EXPECTED[:,7]= [-1,-1,1,1]
 EXPECTED[:,8]= [-1,-1,0,0]
-directory = "results/results_for_rmd/res12/"
-#directory = "results/brouillon/"
+#directory = "results/results_for_rmd/res12/"
+directory = "results/brouillon/"
 
 
 #plot_score(SCORE_shapley,POS,NEG,ZERO,title="GraphSVX")

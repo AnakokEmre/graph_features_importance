@@ -69,7 +69,7 @@ adj0 = torch.bernoulli(GRDPG_decode(Z1,Z2,NEG))
 SCORE_simple = simple_score(adj0,features01)
 
 #%%
-plot_score(SCORE_simple,POS,NEG,ZERO,intercept=1,title="simple")
+plot_score(SCORE_simple,POS,NEG,ZERO,intercept=0,title="simple")
 
 
 #%% Simulation 1
@@ -423,9 +423,9 @@ x1_1[:,1] = change_data_signe(x1_1[:,1],[1,1,-1,-1],species_index) #2
 x1_1[:,2] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
 
 
-x1_2[:,1] = change_data_signe(x1_1[:,1],[1,1,-1,-1],species_index) #2
+x1_2[:,1] = change_data_signe(x1_2[:,1],[1,1,-1,-1],species_index) #2
 
-x1_2[:,2] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
+x1_2[:,2] = change_data_signe(x1_2[:,2],[1,1,0,0],species_index) #3
 
 features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),x1_1,x1_2,x1_3])
 
@@ -484,9 +484,9 @@ x1_1[:,1] = change_data_signe(x1_1[:,1],[1,1,-1,-1],species_index) #2
 x1_1[:,2] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
 
 
-x1_2[:,1] = change_data_signe(x1_1[:,1],[1,1,-1,-1],species_index) #2
+x1_2[:,1] = change_data_signe(x1_2[:,1],[1,1,-1,-1],species_index) #2
 
-x1_2[:,2] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
+x1_2[:,2] = change_data_signe(x1_2[:,2],[1,1,0,0],species_index) #3
 
 features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),species_index_ind,x1_1,x1_2,x1_3])
 
@@ -538,9 +538,71 @@ S = np.hstack([x1_1[:,0].reshape(-1,1),x1_2[:,0].reshape(-1,1)])
 
 features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),x1_1,x1_2,x1_3])
 #%%
+EXPECTED = np.zeros((1,features01.shape[1]))
+EXPECTED[0,2:4]=1
+EXPECTED[0,5:7] = -1
+
 SCORE_simple = simple_score(adj0,features01)
+return_scores_aggregated(SCORE_simple,EXPECTED,intercept = 1)
 #%%
 plot_score(SCORE_simple,POS,NEG,ZERO,title="Simple",fontsize=20,HSIC = [1,4])
+
+return_scores_aggregated(SCORE_simple,EXPECTED,intercept = 1)
+
+#%% Simulation 10_bis
+## Schéma de simulation de base, avec 3 cov de chaque 
+## HSIC pour voir si on arrive a retirer la dépendance (ça n'a pas trop de sens ici)
+
+
+n1=1000
+n2=100
+#np.random.seed(1)
+POS = 3 
+NEG = 3 
+ZERO = 3
+x1_1 = np.random.normal(size=(n1,POS))
+x1_2 = np.random.normal(size=(n1,NEG))
+x1_3 = np.random.normal(size=(n1,ZERO))
+    
+x2_1 = np.random.normal(loc=1,scale=1,size=(n2,POS))
+x2_2 = np.random.normal(loc=1,scale=1,size=(n2,NEG))
+    
+Z1 = torch.Tensor(np.concatenate([x1_1,x1_2],axis=1))
+Z2 = torch.Tensor(np.concatenate([x2_1,x2_2],axis=1))
+    
+
+    
+adj0 = torch.bernoulli(GRDPG_decode(Z1,Z2,NEG))
+S = np.hstack([x1_1[:,0].reshape(-1,1),x1_2[:,0].reshape(-1,1)])
+#adj = sp.csr_matrix(adj0) 
+
+#features01 = np.eye(adj0.shape[0])
+#features02 = np.eye(adj0.shape[1])
+
+features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),
+                        x1_1,
+                        2*x1_1[:,0].reshape(-1,1)+x1_2,
+                        x1_3])
+#%%
+EXPECTED = np.zeros((1,features01.shape[1]))
+EXPECTED[0,2:4]=1
+EXPECTED[0,5:7] = -1
+
+SCORE_simple = simple_score(adj0,features01)
+return_scores_aggregated(SCORE_simple,EXPECTED,intercept = 1)
+#%%
+plot_score(SCORE_simple,POS,NEG,ZERO,title="Simple",fontsize=20,HSIC = [1,4])
+
+
+#%%
+features02 = np.ones(shape=(adj0.shape[1],1))
+model,features1,features2,adj_norm,test_roc =  train_model(adj0,features01,features02,GRDPG=3,latent_dim=6,fair=S,delta=n1,niter= 1000)
+A_pred,z1,z2 = model(features1,features2,adj_norm)
+
+SCORE_simple_fair = simple_score(A_pred.detach().numpy(),features01)
+
+plot_score(SCORE_simple_fair,POS,NEG,ZERO,title="Simple fair",fontsize=20,HSIC = [1,4])
+return_scores_aggregated(SCORE_simple_fair,EXPECTED,intercept = 1)
 
 
 
@@ -602,6 +664,19 @@ plot_aggregated(SCORE_simple.iloc[:,:1+POS+NEG],EXPECTED[:,:1+POS+NEG],title="Si
 return_scores_aggregated(SCORE_simple,EXPECTED,intercept = 1)
 
 
+#%%
+features02 = np.ones(shape=(adj0.shape[1],1))
+model,features1,features2,adj_norm,test_roc =  train_model(adj0,features01,features02,GRDPG=3,latent_dim=6,fair=S,delta=n1,niter= 1000)
+A_pred,z1,z2 = model(features1,features2,adj_norm)
+
+SCORE_simple_fair = simple_score(A_pred.detach().numpy(),features01,species_index)
+
+plot_aggregated(SCORE_simple_fair,   EXPECTED,title="Simple",annot=False,color_expected=False,zero=POS+NEG+1)
+plot_aggregated(SCORE_simple_fair.iloc[:,:1+POS+NEG],EXPECTED[:,:1+POS+NEG],title="Simple",annot=False,sign=True,intercept=1)
+
+return_scores_aggregated(SCORE_simple_fair,EXPECTED,intercept = 1)
+
+
 
 #%% Simulation 12
 ## La variable a un effet positif ou négatif, ou nul en fonction du groupe auquel il appartient
@@ -637,8 +712,8 @@ adj0 = torch.bernoulli(GRDPG_decode(Z1,Z2,NEG))
 
 x1_1[:,2] = change_data_signe(x1_1[:,1],[1,1,-1,-1],species_index) #2
 x1_1[:,3] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
-x1_2[:,2] = change_data_signe(x1_1[:,1],[1,1,-1,-1],species_index) #2
-x1_2[:,3] = change_data_signe(x1_1[:,2],[1,1,0,0],species_index) #3
+x1_2[:,2] = change_data_signe(x1_2[:,1],[1,1,-1,-1],species_index) #2
+x1_2[:,3] = change_data_signe(x1_2[:,2],[1,1,0,0],species_index) #3
 S = np.hstack([x1_1[:,0].reshape(-1,1),x1_2[:,0].reshape(-1,1)])
 features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),x1_1,x1_2,x1_3])
 
@@ -658,6 +733,19 @@ plot_aggregated(SCORE_simple,   EXPECTED,title="Simple",annot=False,color_expect
 plot_aggregated(SCORE_simple.iloc[:,:1+POS+NEG],EXPECTED[:,:1+POS+NEG],title="Simple",annot=False,sign=True,intercept=1)
 return_scores_aggregated(SCORE_simple,EXPECTED,intercept = 1)
 
+
+
+#%%
+features02 = np.ones(shape=(adj0.shape[1],1))
+model,features1,features2,adj_norm,test_roc =  train_model(adj0,features01,features02,GRDPG=3,latent_dim=6,fair=S,delta=n1,niter= 2000)
+A_pred,z1,z2 = model(features1,features2,adj_norm)
+
+SCORE_simple_fair = simple_score(A_pred.detach().numpy(),features01,species_index)
+
+plot_aggregated(SCORE_simple_fair,   EXPECTED,title="Simple",annot=False,color_expected=False,zero=POS+NEG+1)
+plot_aggregated(SCORE_simple_fair.iloc[:,:1+POS+NEG],EXPECTED[:,:1+POS+NEG],title="Simple",annot=False,sign=True,intercept=1)
+
+return_scores_aggregated(SCORE_simple_fair,EXPECTED,intercept = 1)
 
 
 
@@ -721,4 +809,18 @@ EXPECTED[:,8+nb_groupe]= [-1,-1,0,0]
 plot_aggregated(SCORE_simple,   EXPECTED,title="Simple",annot=False,color_expected=False,zero=POS+NEG+1+nb_groupe)
 plot_aggregated(SCORE_simple.iloc[:,:1+POS+NEG+nb_groupe],EXPECTED[:,:1+POS+NEG+nb_groupe],title="Simple",annot=False,sign=True,intercept=1+nb_groupe)
 return_scores_aggregated(SCORE_simple,EXPECTED,intercept = 1+nb_groupe)
+
+
+
+#%%
+features02 = np.ones(shape=(adj0.shape[1],1))
+model,features1,features2,adj_norm,test_roc =  train_model(adj0,features01,features02,GRDPG=3,latent_dim=6,fair=S,delta=n1,niter= 2000)
+A_pred,z1,z2 = model(features1,features2,adj_norm)
+
+SCORE_simple_fair = simple_score(A_pred.detach().numpy(),features01,species_index)
+
+plot_aggregated(SCORE_simple_fair,   EXPECTED,title="Simple",annot=False,color_expected=False,zero=POS+NEG+1)
+plot_aggregated(SCORE_simple_fair.iloc[:,:1+POS+NEG],EXPECTED[:,:1+POS+NEG],title="Simple",annot=False,sign=True,intercept=1)
+
+return_scores_aggregated(SCORE_simple_fair,EXPECTED,intercept = 1)
 
