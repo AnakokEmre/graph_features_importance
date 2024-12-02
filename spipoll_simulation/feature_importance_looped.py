@@ -1466,6 +1466,7 @@ RES0 = pandas.DataFrame(columns=["AUC0","AUC1",
                                  "IG1_pos","IG1_neg","IG1_odg",
                                  "grad_LM_pos","grad_LM_neg","grad_LM_odg",
                                  "IG1_LM_pos","IG1_LM_neg","IG1_LM_odg",
+                                 "simple_pos","simple_neg","simple_odg"
                                ],index=range(K))
 for k in range(K):
     print(k)  
@@ -1527,12 +1528,12 @@ for k in range(K):
     features01 = np.ones(shape=(adj0.shape[0],1))
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,SP,test_roc0,test_roc3_0 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 500)
+    model,features1,features2,adj_norm,SP,test_roc0,test_roc3_0 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 1000)
     
     features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),species_index_ind ,x1_1,x1_2,x1_3])
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,SP,test_roc1,test_roc3_1 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 500)
+    model,features1,features2,adj_norm,SP,test_roc1,test_roc3_1 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 1000)
         
 
     #SCORE_shapley = graph_shapley_score(model,features01,features02,adj_norm,SP,n_repeat = 1000)
@@ -1548,7 +1549,8 @@ for k in range(K):
     EXPECTED[:,6+nb_groupe]= -1
     EXPECTED[:,7+nb_groupe]= -signe3
     EXPECTED[:,8+nb_groupe]= -signe4
-    
+    SCORE_simple = simple_score(adj0,features01,SP,np.arange(n01))
+
     
     RES0.loc[k,["AUC0","AUC1"]] = test_roc0,test_roc1
     RES0.loc[k,["AUC3_0","AUC3_1"]] = test_roc3_0,test_roc3_1
@@ -1558,11 +1560,13 @@ for k in range(K):
     RES0.loc[k,["IG1_pos","IG1_neg","IG1_odg"]] = return_scores_aggregated(aggregation_score_mean(SCORE_IG1,species_index),EXPECTED,intercept = 1+ nb_groupe)
     RES0.loc[k,["grad_LM_pos","grad_LM_neg","grad_LM_odg"]] = return_scores_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index),EXPECTED,intercept = 1+ nb_groupe)
     RES0.loc[k,["IG1_LM_pos","IG1_LM_neg","IG1_LM_odg"]] = return_scores_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index),EXPECTED,intercept = 1+ nb_groupe)
+    RES0.loc[k,["simple_pos","simple_neg","simple_odg"]] = return_scores_aggregated(SCORE_simple,EXPECTED,intercept = 1+ nb_groupe)
+
     print(RES0.mean(0).round(3))
     
 RES14 = RES0.copy()
 #RES8.to_csv("results\\results_for_rmd\\res8\\res.csv")
-RES14.to_csv("results/results_for_rmd/res14/res.csv")
+#RES14.to_csv("results/results_for_rmd/res14/res.csv")
 
 
 
@@ -1585,6 +1589,7 @@ RES0 = pandas.DataFrame(columns=["AUC0","AUC1",
                                  "IG1_pos","IG1_neg","IG1_odg",
                                  "grad_LM_pos","grad_LM_neg","grad_LM_odg",
                                  "IG1_LM_pos","IG1_LM_neg","IG1_LM_odg",
+                                 "simple_pos","simple_neg","simple_odg"
                                ],index=range(K))
 for k in range(K):
     print(k)  
@@ -1646,12 +1651,12 @@ for k in range(K):
     features01 = np.ones(shape=(adj0.shape[0],1))
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,SP,test_roc0,test_roc3_0 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 500)
+    model,features1,features2,adj_norm,SP,test_roc0,test_roc3_0 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 1000)
     
     features01 = np.hstack([np.ones(shape=(adj0.shape[0],1)),species_index_ind ,x1_1,x1_2,x1_3])
     features02 = np.ones(shape=(adj0.shape[1],1))
     
-    model,features1,features2,adj_norm,SP,test_roc1,test_roc3_1 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 500)
+    model,features1,features2,adj_norm,SP,test_roc1,test_roc3_1 =  train_model(adj0,features01,features02,species_index0,bipartite_net,fair=S,delta=10,GRDPG=3,latent_dim=6,niter= 1000)
         
 
     #SCORE_shapley = graph_shapley_score(model,features01,features02,adj_norm,SP,n_repeat = 1000)
@@ -1667,7 +1672,8 @@ for k in range(K):
     EXPECTED[:,6+nb_groupe]= -1
     EXPECTED[:,7+nb_groupe]= -signe3
     EXPECTED[:,8+nb_groupe]= -signe4
-    
+    SCORE_simple = simple_score(adj0,features01,SP,np.arange(n01))
+
     
     RES0.loc[k,["AUC0","AUC1"]] = test_roc0,test_roc1
     RES0.loc[k,["AUC3_0","AUC3_1"]] = test_roc3_0,test_roc3_1
@@ -1677,6 +1683,7 @@ for k in range(K):
     RES0.loc[k,["IG1_pos","IG1_neg","IG1_odg"]] = return_scores_aggregated(aggregation_score_mean(SCORE_IG1,species_index),EXPECTED,intercept = 1+ nb_groupe)
     RES0.loc[k,["grad_LM_pos","grad_LM_neg","grad_LM_odg"]] = return_scores_aggregated(aggregation_score_LM(SCORE_grad,features01,species_index),EXPECTED,intercept = 1+ nb_groupe)
     RES0.loc[k,["IG1_LM_pos","IG1_LM_neg","IG1_LM_odg"]] = return_scores_aggregated(aggregation_score_LM(SCORE_IG1,features01,species_index),EXPECTED,intercept = 1+ nb_groupe)
+    RES0.loc[k,["simple_pos","simple_neg","simple_odg"]] = return_scores_aggregated(SCORE_simple,EXPECTED,intercept = 1+ nb_groupe)
     print(RES0.mean(0).round(3))
     
 RES15 = RES0.copy()
