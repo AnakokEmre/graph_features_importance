@@ -24,7 +24,7 @@ incorporated into the model. A GNN embeds the network, feature importance method
 
 # Results on Spipoll dataset
 
-Spipoll is a French citizen science program aiming at monitoring plant-pollinator interactions across metropolitan France since 2010. A GNN embeds the network, feature importance methods are then applied to study which features of this network contribute to the connectivity. Climate data was obtained using the R package [climateExtract](https://retoschmucki.github.io/climateExtract/), while land use data comes from the [European Union's Copernicus Land Monitoring Service information](https://land.copernicus.eu/en/products/corine-land-cover/clc2018)
+Spipoll is a French citizen science program aiming at monitoring plant-pollinator interactions across metropolitan France since 2010. A GNN embeds the network, feature importance methods are then applied to study which features of this network contribute to the connectivity. Climate data was obtained using the R package [climateExtract](https://retoschmucki.github.io/climateExtract/), while land use data comes from the [European Union's Copernicus Land Monitoring Service information](https://land.copernicus.eu/en/products/corine-land-cover/clc2018).
  
  
 [Spipoll results](https://AnakokEmre.github.io/graph_features_importance/spipoll/result_models_1000m/Spipoll_results.html)
